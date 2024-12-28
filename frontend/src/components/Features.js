@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 const features = [
   { title: 'Kahani Kosh', description: 'Financial storytelling for growth.', icon: '📘', path: '/kahani-kosh' },
-  { title: 'Bachat Sathi', description: 'Your saving companion.', icon: '💰', path: '/bachat-sathi' },
+  { title: 'Bachat Saathi', description: 'Your saving companion.', icon: '💰', path: '/bachat-saathi' },
   { title: 'Smart Nivesh', description: 'Invest smartly with AI insights.', icon: '📊', path: '/smart-nivesh' },
   { title: 'Salah Sakhi', description: 'Personalized financial advice.', icon: '🤝', path: '/salahsakhi' },
   { title: 'Nirnay', description: 'Decision-making simplified.', icon: '⚖️', path: '/nirnay' },

@@ -19,8 +19,8 @@ const Signup = () => {
     const formData = { mobile, password };
     localStorage.setItem("signupData", JSON.stringify(formData));
 
-    alert("Signup successful! Please login.");
-    navigate("/login");
+    alert("Signup successful! Redirecting to Villager Form.");
+    navigate("/detail");  // Navigate to /detail page after successful signup
   };
 
   return (

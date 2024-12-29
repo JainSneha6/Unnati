@@ -13,8 +13,11 @@ const Login = () => {
     const savedData = JSON.parse(localStorage.getItem("signupData"));
 
     if (savedData && savedData.mobile === mobile && savedData.password === password) {
+      // Save login state in localStorage
+      localStorage.setItem("isLoggedIn", "true");
+
       alert("Login successful!");
-      navigate("/");
+      navigate("/");  // Redirect to home page after successful login
     } else {
       alert("Invalid mobile number or password!");
     }

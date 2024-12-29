@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const VillagerForm = () => {
   const [name, setName] = useState("");
@@ -30,6 +31,8 @@ const VillagerForm = () => {
     "Save for a family wedding",
     "Other",
   ];
+
+  const navigate = useNavigate();
 
   const handleOccupationChange = (e) => {
     const value = e.target.value;
@@ -64,7 +67,9 @@ const VillagerForm = () => {
     // Store form data in localStorage
     localStorage.setItem("villagerFormData", JSON.stringify(formData));
 
-    console.log("Form data saved to localStorage", formData);
+    // Alert and navigate to login page
+    alert("Form submitted successfully!");
+    navigate("/login");
   };
 
   return (

@@ -58,37 +58,36 @@ const SalahSakhi = () => {
     };
   }, []);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (userInput.trim() !== "") {
       setMessages([...messages, { sender: "user", text: userInput }]);
       setUserInput("");
       setIsBotTyping(true);
 
-      setTimeout(() => {
-        const botResponse = getBotResponse(userInput.toLowerCase());
+      try {
+        // Send the user's message to the backend
+        const response = await fetch("http://localhost:5000/chatbot", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: userInput }),
+        });
+
+        const data = await response.json();
+        const botResponse = data.response || "Sorry, I didn't understand that.";
+        
         setMessages((prevMessages) => [
           ...prevMessages,
           { sender: "bot", text: botResponse },
         ]);
+        
         speak(botResponse);
         setIsBotTyping(false);
-      }, 2000);
-    }
-  };
-
-  const getBotResponse = (input) => {
-    if (input.includes("loan") || input.includes("money loan")) {
-      return "You can apply for a loan at your local bank or microfinance institution. They offer loans with varying interest rates depending on your needs.";
-    } else if (input.includes("savings") || input.includes("save money")) {
-      return "It's important to save a portion of your income. You can open a savings account at a bank or invest in a safe savings plan to earn interest.";
-    } else if (input.includes("insurance")) {
-      return "Insurance can help protect you and your family financially in case of emergencies. You can check with insurance providers for health, life, and crop insurance plans.";
-    } else if (input.includes("business") || input.includes("start a business")) {
-      return "Starting a business requires planning and investment. You may want to apply for a loan or seek help from local business development programs.";
-    } else if (input.includes("investment") || input.includes("invest money")) {
-      return "Investing in stocks, mutual funds, or starting a business can help grow your money. Make sure to research well or seek advice from a financial advisor.";
-    } else {
-      return "Sorry, I didn't understand that. Could you ask me about something related to finances?";
+      } catch (error) {
+        console.error("Error sending message:", error);
+        setIsBotTyping(false);
+      }
     }
   };
 

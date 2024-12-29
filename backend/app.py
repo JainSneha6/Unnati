@@ -91,42 +91,67 @@ def generate_recommendation():
         print(f"Error while generating recommendation: {e}")
         return jsonify({"message": "Error generating recommendation"}), 500
 
-@app.route('/savings-plan', methods=['POST'])
-def generate_savings_plan():
+# @app.route('/savings-plan', methods=['POST'])
+# def generate_savings_plan():
+#     try:
+#         # Parse request data
+#         data = request.json
+#         if not data:
+#             return jsonify({"message": "Invalid data provided"}), 400
+
+#         # Extract required fields
+#         savings_goals = data.get("savingsGoals", [])
+#         recommendations = data.get("recommendations", [])
+
+#         if not savings_goals or not recommendations:
+#             return jsonify({"message": "Missing savings goals or recommendations"}), 400
+
+#         # Create a prompt for Gemini
+#         prompt = (
+#     f"User's savings goals: {', '.join(savings_goals)}.\n\n"
+#     f"Budget recommendations: {', '.join([f'{rec['category']} - ₹{rec['amount']}' for rec in recommendations])}.\n\n"
+#     f"Based on these, suggest a creative and concise name for a personalized savings plan."
+#     f"Do not give anything else in the output and keep into consideration that user is a villager."
+# )
+
+
+
+#         # Generate savings plan using Gemini
+#         response = model.generate_content([prompt])
+#         savings_plan = response.text
+
+#         # Respond with the savings plan
+#         return jsonify({"savingsPlan": savings_plan}), 200
+
+#     except Exception as e:
+#         print(f"Error while generating savings plan: {e}")
+#         return jsonify({"message": "Error generating savings plan"}), 500
+
+@app.route('/chatbot', methods=['POST'])
+def generate_chat_response():
     try:
-        # Parse request data
+        # Parse the request data from the React frontend
         data = request.json
         if not data:
             return jsonify({"message": "Invalid data provided"}), 400
 
-        # Extract required fields
-        savings_goals = data.get("savingsGoals", [])
-        recommendations = data.get("recommendations", [])
+        user_message = data.get("message")
+        if not user_message:
+            return jsonify({"message": "Message is required"}), 400
 
-        if not savings_goals or not recommendations:
-            return jsonify({"message": "Missing savings goals or recommendations"}), 400
+        # Create a prompt for Gemini model (using user's message)
+        prompt = f"User: {user_message}\n\nAssistant:"
 
-        # Create a prompt for Gemini
-        prompt = (
-    f"User's savings goals: {', '.join(savings_goals)}.\n\n"
-    f"Budget recommendations: {', '.join([f'{rec['category']} - ₹{rec['amount']}' for rec in recommendations])}.\n\n"
-    f"Based on these, suggest a creative and concise name for a personalized savings plan."
-    f"Do not give anything else in the output and keep into consideration that user is a villager."
-)
-
-
-
-        # Generate savings plan using Gemini
+        # Generate response using Gemini model
         response = model.generate_content([prompt])
-        savings_plan = response.text
+        bot_reply = response.text.strip()
 
-        # Respond with the savings plan
-        return jsonify({"savingsPlan": savings_plan}), 200
+        # Return the generated response to the frontend
+        return jsonify({"response": bot_reply}), 200
 
     except Exception as e:
-        print(f"Error while generating savings plan: {e}")
-        return jsonify({"message": "Error generating savings plan"}), 500
-
+        print(f"Error while generating chat response: {e}")
+        return jsonify({"message": "Error generating chat response"}), 500
 
 
 if __name__ == '__main__':

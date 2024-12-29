@@ -17,7 +17,7 @@ const Login = () => {
       localStorage.setItem("isLoggedIn", "true");
 
       alert("Login successful!");
-      navigate("/");  // Redirect to home page after successful login
+      navigate("/home");  // Redirect to home page after successful login
     } else {
       alert("Invalid mobile number or password!");
     }

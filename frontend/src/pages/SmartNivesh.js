@@ -137,7 +137,7 @@ const SmartNiveshPage = () => {
   };
 
   const navigateToHomepage = () => {
-    navigate("/");
+    navigate("/home");
   };
 
   return (

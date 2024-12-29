@@ -2,25 +2,33 @@ import React, { useState, useEffect } from "react";
 
 const BachatSaathiPage = () => {
   const [formData, setFormData] = useState(null);
-  const [recommendation, setRecommendation] = useState(null);
+  const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch form data from local storage on component mount
+  // Fetch form data and recommendations from localStorage on mount
   useEffect(() => {
-    const storedData = localStorage.getItem("transactionFormData");
+    const storedFormData = localStorage.getItem("transactionFormData");
+    const storedRecommendations = localStorage.getItem("recommendations");
 
-    if (storedData) {
-      setFormData(JSON.parse(storedData));
+    if (storedFormData) {
+      setFormData(JSON.parse(storedFormData));
     } else {
-      setError("No data found in local storage.");
+      setError("No form data found in local storage.");
+    }
+
+    if (storedRecommendations) {
+      setRecommendations(JSON.parse(storedRecommendations));
+    } else {
+      // If recommendations are not found, call the backend
+      if (storedFormData) {
+        getRecommendation(JSON.parse(storedFormData));
+      }
     }
   }, []);
 
-  // Send data to backend to get a recommendation
-  const getRecommendation = async () => {
-    if (!formData) return;
-
+  // Fetch recommendations from backend and store in localStorage
+  const getRecommendation = async (data) => {
     setLoading(true);
     setError(null);
 
@@ -30,7 +38,7 @@ const BachatSaathiPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
 
       if (!response.ok) {
@@ -38,7 +46,11 @@ const BachatSaathiPage = () => {
       }
 
       const result = await response.json();
-      setRecommendation(result.recommendation);
+      const { recommendations } = result;
+
+      // Store recommendations in state and local storage
+      setRecommendations(recommendations);
+      localStorage.setItem("recommendations", JSON.stringify(recommendations));
     } catch (err) {
       setError("Error while fetching recommendation: " + err.message);
     } finally {
@@ -78,25 +90,29 @@ const BachatSaathiPage = () => {
               </p>
             </div>
 
-            <div className="flex justify-center mb-6">
-              <button
-                onClick={getRecommendation}
-                className="bg-teal-500 hover:bg-teal-600 text-white py-4 px-8 rounded-lg shadow-xl transition duration-300 focus:outline-none focus:ring-4 focus:ring-teal-300"
-              >
-                Get Personalized Recommendation
-              </button>
-            </div>
-
-            {loading && <div className="text-center text-lg">Fetching your recommendation...</div>}
-
-            {recommendation && (
-              <div className="mt-6 p-4 bg-teal-100 rounded-lg">
-                <h3 className="text-2xl font-semibold text-teal-500 mb-4">Your Personalized Recommendation</h3>
-                <div
-                  className="text-lg"
-                  dangerouslySetInnerHTML={{ __html: recommendation }}
-                />
-              </div>
+            {loading ? (
+              <div className="text-center text-lg">Fetching your recommendation...</div>
+            ) : (
+              <>
+                {recommendations.length > 0 ? (
+                  <div className="mt-6 p-4 bg-teal-100 rounded-lg">
+                    <h3 className="text-2xl font-semibold text-teal-500 mb-4">
+                      Your Personalized Recommendation
+                    </h3>
+                    <ul className="text-lg">
+                      {recommendations.map((rec, index) => (
+                        <li key={index} className="mb-2">
+                          {rec.category} - ₹{rec.amount}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <div className="text-center text-lg">
+                    No recommendations available. Try fetching them again.
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

@@ -61,14 +61,19 @@ def generate_recommendation():
         # Generate recommendation using Gemini
         response = model.generate_content([prompt])
         recommendation = response.text
+        print(recommendation)
+        # Use regex to extract categories and amounts
+        pattern = r"(\d+)\.\s*([A-Za-z\s]+)\s*-\s*₹(\d+)"
+        matches = re.findall(pattern, recommendation)
 
-        # Replace double asterisks with <br /> tags for line breaks in HTML
-        formatted_recommendation = recommendation.replace("**", "")
-        formatted_recommendation = formatted_recommendation.replace("*", "<br />")
-        formatted_recommendation = re.sub(r'([1-9])\.', r'<br />\1.', formatted_recommendation)
+        # Convert matches into a structured JSON format
+        recommendations = [
+            {"rank": int(match[0]), "category": match[1].strip(), "amount": int(match[2])}
+            for match in matches
+        ]
 
-        # Respond to the frontend with the recommendation
-        return jsonify({"recommendation": formatted_recommendation}), 200
+        # Respond to the frontend with the structured recommendation
+        return jsonify({"recommendations": recommendations}), 200
 
     except Exception as e:
         print(f"Error while generating recommendation: {e}")

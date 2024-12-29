@@ -1,39 +1,51 @@
 import React, { useState } from "react";
 
-const TransactionForm = () => {
+const VillagerForm = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
-  const [spendingFrequency, setSpendingFrequency] = useState("");
-  const [expenseTracking, setExpenseTracking] = useState("");
-  const [financialGoals, setFinancialGoals] = useState([]);
-  const [income, setIncome] = useState(0);
+  const [familySize, setFamilySize] = useState(0);
+  const [occupation, setOccupation] = useState([]);
+  const [monthlyIncome, setMonthlyIncome] = useState(0);
+  const [savingsGoals, setSavingsGoals] = useState([]);
 
-  const financialGoalsOptions = [
-    "Save for emergency fund",
-    "Buy a house",
-    "Pay off debt",
-    "Invest in stocks",
-    "Start a business",
+  const occupationOptions = [
+    "Farmer",
+    "Daily Wage Laborer",
+    "Small Shop Owner",
+    "Teacher",
+    "Household Worker",
+    "Fisherman",
+    "Driver",
+    "Craftsman",
+    "Other",
   ];
 
-  const spendingFrequencyOptions = [
-    "Once or twice a week",
-    "3-4 times a week",
-    "5 or more times a week",
+  const savingsGoalsOptions = [
+    "Save for child's education",
+    "Build a house",
+    "Buy farming equipment",
+    "Start a small business",
+    "Purchase livestock",
+    "Plan for medical emergencies",
+    "Save for a family wedding",
+    "Other",
   ];
 
-  const expenseTrackingOptions = [
-    "Yes, I keep track regularly",
-    "Sometimes, but not consistently",
-    "No, I don’t track my expenses",
-  ];
-
-  const handleGoalChange = (e) => {
+  const handleOccupationChange = (e) => {
     const value = e.target.value;
-    if (financialGoals.includes(value)) {
-      setFinancialGoals(financialGoals.filter((goal) => goal !== value));
+    if (occupation.includes(value)) {
+      setOccupation(occupation.filter((item) => item !== value));
     } else {
-      setFinancialGoals([...financialGoals, value]);
+      setOccupation([...occupation, value]);
+    }
+  };
+
+  const handleSavingsGoalChange = (e) => {
+    const value = e.target.value;
+    if (savingsGoals.includes(value)) {
+      setSavingsGoals(savingsGoals.filter((goal) => goal !== value));
+    } else {
+      setSavingsGoals([...savingsGoals, value]);
     }
   };
 
@@ -43,14 +55,14 @@ const TransactionForm = () => {
     const formData = {
       name,
       age,
-      spendingFrequency,
-      expenseTracking,
-      financialGoals,
-      income,
+      familySize,
+      occupation,
+      monthlyIncome,
+      savingsGoals,
     };
 
     // Store form data in localStorage
-    localStorage.setItem("transactionFormData", JSON.stringify(formData));
+    localStorage.setItem("villagerFormData", JSON.stringify(formData));
 
     console.log("Form data saved to localStorage", formData);
   };
@@ -58,7 +70,7 @@ const TransactionForm = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-r from-blue-500 to-teal-400 text-white py-12 px-4">
       <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-xl text-gray-800">
-        <h2 className="text-4xl font-bold text-center mb-6 text-teal-500">Transaction Form</h2>
+        <h2 className="text-4xl font-bold text-center mb-6 text-teal-500">Villager Details Form</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-6">
@@ -93,78 +105,79 @@ const TransactionForm = () => {
             </div>
 
             <div>
-              <label htmlFor="spendingFrequency" className="block text-lg font-semibold mb-2">
-                How often do you make purchases on non-essential items?
+              <label htmlFor="familySize" className="block text-lg font-semibold mb-2">
+                Family Size
               </label>
-              <select
-                id="spendingFrequency"
-                value={spendingFrequency}
-                onChange={(e) => setSpendingFrequency(e.target.value)}
-                className="w-full p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              >
-                <option value="">Select Spending Frequency</option>
-                {spendingFrequencyOptions.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              <input
+                type="range"
+                id="familySize"
+                min="1"
+                max="20"
+                value={familySize}
+                onChange={(e) => setFamilySize(e.target.value)}
+                className="w-full h-2 bg-teal-300 rounded-lg appearance-none cursor-pointer"
+              />
+              <div className="text-center mt-2">
+                <span className="text-xl font-semibold">{familySize} members</span>
+              </div>
             </div>
 
             <div>
-              <label htmlFor="expenseTracking" className="block text-lg font-semibold mb-2">
-                Do you track your expenses regularly?
-              </label>
-              <select
-                id="expenseTracking"
-                value={expenseTracking}
-                onChange={(e) => setExpenseTracking(e.target.value)}
-                className="w-full p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              >
-                <option value="">Select Expense Tracking Habit</option>
-                {expenseTrackingOptions.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="financialGoals" className="block text-lg font-semibold mb-2">
-                Financial Goals
+              <label htmlFor="occupation" className="block text-lg font-semibold mb-2">
+                Occupation
               </label>
               <div className="flex flex-wrap gap-4">
-                {financialGoalsOptions.map((goal, index) => (
+                {occupationOptions.map((job, index) => (
                   <label key={index} className="inline-flex items-center">
                     <input
                       type="checkbox"
-                      value={goal}
-                      checked={financialGoals.includes(goal)}
-                      onChange={handleGoalChange}
+                      value={job}
+                      checked={occupation.includes(job)}
+                      onChange={handleOccupationChange}
                       className="mr-2 rounded-md focus:ring-teal-500"
                     />
-                    {goal}
+                    {job}
                   </label>
                 ))}
               </div>
             </div>
 
             <div>
-              <label htmlFor="income" className="block text-lg font-semibold mb-2">
-                Income (per month)
+              <label htmlFor="monthlyIncome" className="block text-lg font-semibold mb-2">
+                Monthly Income (₹)
               </label>
               <input
                 type="range"
-                id="income"
+                id="monthlyIncome"
                 min="1000"
                 max="500000"
-                value={income}
-                onChange={(e) => setIncome(e.target.value)}
+                step="500"
+                value={monthlyIncome}
+                onChange={(e) => setMonthlyIncome(e.target.value)}
                 className="w-full h-2 bg-teal-300 rounded-lg appearance-none cursor-pointer"
               />
               <div className="text-center mt-2">
-                <span className="text-xl font-semibold">₹{income}</span>
+                <span className="text-xl font-semibold">₹{monthlyIncome}</span>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="savingsGoals" className="block text-lg font-semibold mb-2">
+                Savings Goals
+              </label>
+              <div className="flex flex-wrap gap-4">
+                {savingsGoalsOptions.map((goal, index) => (
+                  <label key={index} className="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      value={goal}
+                      checked={savingsGoals.includes(goal)}
+                      onChange={handleSavingsGoalChange}
+                      className="mr-2 rounded-md focus:ring-teal-500"
+                    />
+                    {goal}
+                  </label>
+                ))}
               </div>
             </div>
 
@@ -183,4 +196,4 @@ const TransactionForm = () => {
   );
 };
 
-export default TransactionForm;
+export default VillagerForm;

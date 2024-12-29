@@ -23,22 +23,22 @@ def generate_recommendation():
         # Extract the form data
         name = data.get("name")
         age = data.get("age")
-        spending_frequency = data.get("spendingFrequency")
-        expense_tracking = data.get("expenseTracking")
-        financial_goals = data.get("financialGoals", [])
-        income = data.get("income")
+        family_size = data.get("familySize")
+        monthly_income = data.get("monthlyIncome")
+        savings_goals = data.get("savingsGoals", [])
+        occupation = data.get("occupation",[])
 
         # Validate required fields
-        if not all([name, age, spending_frequency, expense_tracking, income]):
+        if not all([name, age, family_size,monthly_income, savings_goals, occupation]):
             return jsonify({"message": "Missing required fields"}), 400
 
         # Create a prompt for the recommendation model
         user_info = (
             f"Name: {name}\nAge: {age}\n"
-            f"Spending Frequency: {spending_frequency}\n"
-            f"Expense Tracking Habit: {expense_tracking}\n"
-            f"Financial Goals: {', '.join(financial_goals)}\n"
-            f"Income: ₹{income}(monthly)"
+            f"Family Size: {family_size}\n"
+            f"Monthly Income: {monthly_income}\n"
+            f"Savings Goals: {', '.join(savings_goals)}\n"
+            f"Occupation: {', '.join(occupation)}\n"
         )
         prompt = (
     f"I have a user with the following details:\n\n{user_info}\n\n"
@@ -51,9 +51,19 @@ def generate_recommendation():
     f"6. [Category] - ₹[Amount]\n"
     f"7. [Category] - ₹[Amount]\n"
     f"8. [Category] - ₹[Amount]\n\n"
-    f"The categories should include separate categories for food,transport"
-    f"Ensure the response includes only numbers and categories, with no lengthy explanations or extra information. "
+    f"9. [Category] - ₹[Amount]\n"
+    f"10. [Category] - ₹[Amount]\n\n"
+    f"11. [Category] - ₹[Amount]\n"
+    f"12. [Category] - ₹[Amount]\n\n"
+    f"13. [Category] - ₹[Amount]\n"
+    f"14. [Category] - ₹[Amount]\n\n"
+    f"15. [Category] - ₹[Amount]\n"
+    f"The categories should include separate categories for food,transport, electricity, water,cooking fuel"
+    f"Take into consideration the occupation of the person to select some categories."
+    f"Ensure the response includes only numbers and categories, with no lengthy explanations or extra information.Do not assign 0 to any category."
+    f"If the monthly income of the person is less give only important categories. Unnecessary categories like clothing and personal care should be prohibited in that case."
     f"The output should focus on actionable budget allocations using clear, simple language."
+    f""
     
 )
 
@@ -63,9 +73,11 @@ def generate_recommendation():
         recommendation = response.text
         print(recommendation)
         # Use regex to extract categories and amounts
-        pattern = r"(\d+)\.\s*([A-Za-z\s]+)\s*-\s*₹(\d+)"
+        pattern = r"(\d+)\.\s*([A-Za-z\s\/&\(\),]+)\s*-\s*₹(\d+)"
+
         matches = re.findall(pattern, recommendation)
 
+        print(matches)
         # Convert matches into a structured JSON format
         recommendations = [
             {"rank": int(match[0]), "category": match[1].strip(), "amount": int(match[2])}
@@ -78,6 +90,43 @@ def generate_recommendation():
     except Exception as e:
         print(f"Error while generating recommendation: {e}")
         return jsonify({"message": "Error generating recommendation"}), 500
+
+@app.route('/savings-plan', methods=['POST'])
+def generate_savings_plan():
+    try:
+        # Parse request data
+        data = request.json
+        if not data:
+            return jsonify({"message": "Invalid data provided"}), 400
+
+        # Extract required fields
+        savings_goals = data.get("savingsGoals", [])
+        recommendations = data.get("recommendations", [])
+
+        if not savings_goals or not recommendations:
+            return jsonify({"message": "Missing savings goals or recommendations"}), 400
+
+        # Create a prompt for Gemini
+        prompt = (
+    f"User's savings goals: {', '.join(savings_goals)}.\n\n"
+    f"Budget recommendations: {', '.join([f'{rec['category']} - ₹{rec['amount']}' for rec in recommendations])}.\n\n"
+    f"Based on these, suggest a creative and concise name for a personalized savings plan."
+    f"Do not give anything else in the output and keep into consideration that user is a villager."
+)
+
+
+
+        # Generate savings plan using Gemini
+        response = model.generate_content([prompt])
+        savings_plan = response.text
+
+        # Respond with the savings plan
+        return jsonify({"savingsPlan": savings_plan}), 200
+
+    except Exception as e:
+        print(f"Error while generating savings plan: {e}")
+        return jsonify({"message": "Error generating savings plan"}), 500
+
 
 
 if __name__ == '__main__':

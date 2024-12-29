@@ -12,7 +12,7 @@ const LanguageSelection = () => {
         { name: "Kannada", phrase: "ಸ್ವಾಗತ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಬಗ್ಗೆ ಹೇಳಿ." },
         { name: "Punjabi", phrase: "ਸੁਆਗਤ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਬਾਰੇ ਦੱਸੋ।" },
         { name: "Marathi", phrase: "स्वागत आहे. कृपया तुमच्याबद्दल सांगा." },
-        { name: "Malayalam", phrase: "സ്വാഗതം. ദയവായി നിങ്ങളുടെ കാര്യം പറയുക." },
+        { name: "Malayalam", phrase: "സ്വാഗതം. ദയവായി നിങ്ങളുടെ കാര്യത്തിന് പറയുക." },
         { name: "Odia", phrase: "ସ୍ଵାଗତ। ଦୟାକରି ଆପଣଙ୍କ ବିଷୟରେ କହନ୍ତୁ।" },
         { name: "Assamese", phrase: "স্বাগতম। অনুগ্ৰহ কৰি আপোনাৰ বিষয়ে ক'ব।" },
         { name: "Maithili", phrase: "स्वागतम्। कृपया अपने बारे में बताऊ।" },
@@ -52,47 +52,46 @@ const LanguageSelection = () => {
         { name: "Tirhuti", phrase: "स्वागतम्। कृपया अपने बारे में बताऊ।" },
         { name: "Sambalpuri", phrase: "ସ୍ଵାଗତ। ଦୟାକରି ଆପଣଙ୍କ ବିଷୟରେ କହନ୍ତୁ।" }
     ];
-    
 
     const handleLanguageClick = (language) => {
         setSelectedLanguage(language);
     };
 
+    const closeModal = () => {
+        setSelectedLanguage(null);
+    };
+
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-400 relative overflow-hidden">
-            {/* Decorative Background */}
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-indigo-500 to-teal-400 opacity-20 animate-pulse blur-lg"></div>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-500 to-teal-400 relative overflow-hidden">
+            <div className={`${selectedLanguage ? 'backdrop-blur-2xl' : 'backdrop-blur-lg'} w-full h-full absolute top-0 left-0 z-20 flex items-center justify-center`}>
+                {/* Decorative Background */}
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-indigo-500 to-teal-400 opacity-20 animate-pulse blur-lg"></div>
 
-            {/* Header Section */}
-            <h1 className="text-white text-4xl md:text-5xl font-extrabold mb-10 drop-shadow-lg text-center">
-                Choose Your Language
-            </h1>
-
-            {/* Language Selection */}
-            {selectedLanguage ? (
-                <div className="text-center bg-white p-10 rounded-lg shadow-xl transform transition duration-500 hover:scale-105">
-                    <h2 className="text-3xl font-bold text-gray-800 mb-6">
-                        {selectedLanguage.name}
-                    </h2>
-                    <p className="text-lg text-gray-600">{selectedLanguage.phrase}</p>
-                    <button
-                        className="mt-8 bg-teal-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-teal-600 transition"
-                        onClick={() => setSelectedLanguage(null)}
-                    >
-                        Back to Language Selection
-                    </button>
-                </div>
-            ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 p-6 bg-opacity-75 rounded-lg">
+                {/* Language Cards */}
+                <div className={`grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-6 gap-5 bg-opacity-75 rounded-lg w-full max-w-screen-xl`}>
                     {languages.map((lang, index) => (
                         <button
                             key={index}
-                            className="bg-white p-6 rounded-lg shadow-lg hover:bg-indigo-100 transform hover:scale-105 transition duration-300"
+                            className="bg-white p-3 rounded-lg shadow-lg hover:bg-indigo-100 transform hover:scale-95 transition duration-300"
                             onClick={() => handleLanguageClick(lang)}
                         >
                             <p className="text-xl font-bold text-gray-800">{lang.name}</p>
                         </button>
                     ))}
+                </div>
+            </div>
+
+            {/* Modal for Selected Language */}
+            {selectedLanguage && (
+                <div className="z-20 fixed inset-0 bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-auto relative z-50 flex flex-col items-center justify-center">
+                    <h2 className="text-3xl font-bold text-gray-800 mb-6">{selectedLanguage.name}</h2>
+                    <p className="text-lg text-gray-600">{selectedLanguage.phrase}</p>
+                    <button
+                        className="mt-8 bg-teal-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-teal-600 transition"
+                        onClick={closeModal}
+                    >
+                        Back to Language Selection
+                    </button>
                 </div>
             )}
         </div>

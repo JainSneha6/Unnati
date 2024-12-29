@@ -25,7 +25,7 @@ const BachatSaathiPage = () => {
     setError(null);
 
     try {
-      const response = await fetch("https://your-backend-api.com/recommendation", {
+      const response = await fetch("http://localhost:5000/recommendation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,10 @@ const BachatSaathiPage = () => {
             {recommendation && (
               <div className="mt-6 p-4 bg-teal-100 rounded-lg">
                 <h3 className="text-2xl font-semibold text-teal-500 mb-4">Your Personalized Recommendation</h3>
-                <p className="text-lg">{recommendation}</p>
+                <div
+                  className="text-lg"
+                  dangerouslySetInnerHTML={{ __html: recommendation }}
+                />
               </div>
             )}
           </div>

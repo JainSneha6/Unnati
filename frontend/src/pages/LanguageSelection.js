@@ -1,116 +1,100 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from "react";
 
 const LanguageSelection = () => {
-    const [voices, setVoices] = useState([]);
-    const [selectedVoice, setSelectedVoice] = useState(null);
+    const [selectedLanguage, setSelectedLanguage] = useState(null);
 
     const languages = [
-        { name: 'Hindi', phrase: 'स्वागत है', englishPhrase: 'Swagat Hai' },
-        { name: 'Tamil', phrase: 'வரவேற்கிறோம்', englishPhrase: 'Varaverkiram' },
-        { name: 'Bengali', phrase: 'স্বাগতম', englishPhrase: 'Swagatam' },
-        { name: 'Telugu', phrase: 'స్వాగతం', englishPhrase: 'Swagatham' },
-        { name: 'Gujarati', phrase: 'સ્વાગત છે', englishPhrase: 'Swagat Chhe' },
-        { name: 'Kannada', phrase: 'ಸ್ವಾಗತ', englishPhrase: 'Swagatha' },
-        { name: 'Punjabi', phrase: 'ਸੁਆਗਤ ਹੈ', englishPhrase: 'Swagat Hai' },
-        { name: 'Marathi', phrase: 'स्वागत आहे', englishPhrase: 'Swagat Aahe' },
-        { name: 'Malayalam', phrase: 'സ്വാഗതം', englishPhrase: 'Swagatham' },
-        { name: 'Odia', phrase: 'ସ୍ଵାଗତ', englishPhrase: 'Swagata' },
-        { name: 'Assamese', phrase: 'স্বাগতম', englishPhrase: 'Swagatam' },
-        { name: 'Maithili', phrase: 'स्वागतम्', englishPhrase: 'Swagatam' },
-        { name: 'Konkani', phrase: 'स्वागत', englishPhrase: 'Swagat' },
-        { name: 'Santali', phrase: 'ᱵᱟᱝᱞᱟ ᱮᱱᱟ', englishPhrase: 'Bengsa Ensa' },
-        { name: 'Tulu', phrase: 'ಸ್ವಾಗತ', englishPhrase: 'Swagatha' },
-        { name: 'Bhojpuri', phrase: 'स्वागत बा', englishPhrase: 'Swagat Ba' },
-        { name: 'Dogri', phrase: 'स्वागतम्', englishPhrase: 'Swagatam' },
-        { name: 'Kashmiri', phrase: 'خوش آمدید', englishPhrase: 'Khush Aamdid' },
-        { name: 'Sindhi', phrase: 'ڀلي ڪري آيا', englishPhrase: 'Bhale Kari Aaya' },
-        { name: 'Urdu', phrase: 'خوش آمدید', englishPhrase: 'Khush Aamdid' },
-        { name: 'Manipuri', phrase: 'ꯃꯔꯤ ꯃꯇꯝ', englishPhrase: 'Meiri Metam' },
-        { name: 'Mizo', phrase: 'Ka lawm e', englishPhrase: 'Ka lawm e' },
-        { name: 'Bodo', phrase: 'विजयफ', englishPhrase: 'Bijayf' },
-        { name: 'Garhwali', phrase: 'स्वागत छ', englishPhrase: 'Swagat Chha' },
-        { name: 'Bhili/Bhilodi', phrase: 'स्वागत छे', englishPhrase: 'Swagat Che' },
-        { name: 'Gondi', phrase: 'स्वागत', englishPhrase: 'Swagat' },
-        { name: 'Ho', phrase: 'ᱵᱟᱝᱞᱟ ᱮᱱᱟ', englishPhrase: 'Bengsa Ensa' },
-        { name: 'Khasi', phrase: 'Sngewbha', englishPhrase: 'Sngewbha' },
-        { name: 'Lepcha', phrase: 'ᰛᰩᰵᰛᰦᰢ', englishPhrase: 'Leptcha' },
-        { name: 'Angika', phrase: 'स्वागत छन्हि', englishPhrase: 'Swagat Chhahi' },
-        { name: 'Kumaoni', phrase: 'स्वागत छु', englishPhrase: 'Swagat Chu' },
-        { name: 'Nagpuri', phrase: 'स्वागत अछी', englishPhrase: 'Swagat Achi' },
-        { name: 'Sanskrit', phrase: 'स्वागतम्', englishPhrase: 'Swagatam' },
-        { name: 'English', phrase: 'Welcome', englishPhrase: 'Welcome' },
-        { name: 'Chhattisgarhi', phrase: 'स्वागत हे', englishPhrase: 'Swagat He' },
-        { name: 'Rajasthani', phrase: 'स्वागत है', englishPhrase: 'Swagat Hai' },
-        { name: 'Sylheti', phrase: 'স্বাগতম', englishPhrase: 'Swagatam' },
-        { name: 'Haryanvi', phrase: 'स्वागत है', englishPhrase: 'Swagat Hai' },
-        { name: 'Tamang', phrase: 'བཀའ་བཏང་འཇོ', englishPhrase: 'Bak Tang Jo' },
-        { name: 'Marwari', phrase: 'स्वागत छ', englishPhrase: 'Swagat Chha' },
-        { name: 'Awadhi', phrase: 'स्वागत बा', englishPhrase: 'Swagat Ba' },
-        { name: 'Karakana', phrase: 'ᬳᬸᬗᬸᬦᬸ', englishPhrase: 'Karaka' },
-        { name: 'Madhya Pradesh Hindi', phrase: 'स्वागत है', englishPhrase: 'Swagat Hai' },
-        { name: 'Pahari', phrase: 'स्वागत है', englishPhrase: 'Swagat Hai' },
-        { name: 'Sourashtra', phrase: 'வரவேற்கிறோம்', englishPhrase: 'Varaverkiram' },
-        { name: 'Bengali (Chittagonian)', phrase: 'স্বাগতম', englishPhrase: 'Swagatam' },
-        { name: 'Meitei', phrase: 'ꯃꯔꯤ ꯃꯇꯝ', englishPhrase: 'Meiri Metam' },
-        { name: 'Kashmiri Pandit', phrase: 'خوش آمدید', englishPhrase: 'Khush Aamdid' },
-        { name: 'Urdu (Deccan)', phrase: 'خوش آمدید', englishPhrase: 'Khush Aamdid' },
-        { name: 'Telugu (Rayalaseema)', phrase: 'స్వాగతం', englishPhrase: 'Swagatham' },
-        { name: 'Manipuri (Meitei)', phrase: 'ꯃꯔꯤ ꯃꯇꯝ', englishPhrase: 'Meiri Metam' },
+        { name: "Hindi", phrase: "स्वागत है। कृपया अपने बारे में बताएं।" },
+        { name: "Tamil", phrase: "வரவேற்கிறோம். உங்கள் பற்றி சொல்லுங்கள்." },
+        { name: "Bengali", phrase: "স্বাগতম। দয়া করে নিজের সম্পর্কে বলুন।" },
+        { name: "Telugu", phrase: "స్వాగతం. దయచేసి మీ గురించి చెప్పండి." },
+        { name: "Gujarati", phrase: "સ્વાગત છે. કૃપા કરીને તમારા વિશે કહો." },
+        { name: "Kannada", phrase: "ಸ್ವಾಗತ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಬಗ್ಗೆ ಹೇಳಿ." },
+        { name: "Punjabi", phrase: "ਸੁਆਗਤ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਬਾਰੇ ਦੱਸੋ।" },
+        { name: "Marathi", phrase: "स्वागत आहे. कृपया तुमच्याबद्दल सांगा." },
+        { name: "Malayalam", phrase: "സ്വാഗതം. ദയവായി നിങ്ങളുടെ കാര്യം പറയുക." },
+        { name: "Odia", phrase: "ସ୍ଵାଗତ। ଦୟାକରି ଆପଣଙ୍କ ବିଷୟରେ କହନ୍ତୁ।" },
+        { name: "Assamese", phrase: "স্বাগতম। অনুগ্ৰহ কৰি আপোনাৰ বিষয়ে ক'ব।" },
+        { name: "Maithili", phrase: "स्वागतम्। कृपया अपने बारे में बताऊ।" },
+        { name: "Konkani", phrase: "स्वागत। कृपया तुजेबद्दल सांग." },
+        { name: "Santali", phrase: "ᱵᱟᱝᱞᱟ ᱮᱱᱟ। ᱵᱟᱢᱟᱜ ᱠᱷᱚᱸᱛᱷᱟᱹ ᱢᱩᱱᱜ ᱱᱟᱲᱟᱞᱮᱱ।" },
+        { name: "Tulu", phrase: "ಸ್ವಾಗತ. ದಯವಿಟ್ಟು ನಿನ್ನ ಬಗ್ಗೆ ಹೇಳು." },
+        { name: "Bhojpuri", phrase: "स्वागत बा। कृपया अपने बारे में बताईं।" },
+        { name: "Dogri", phrase: "स्वागतम्। कृपया अपने बारे में बताइए।" },
+        { name: "Kashmiri", phrase: "خوش آمدید۔ براہ کرم اپنے بارے میں بتائیں۔" },
+        { name: "Sindhi", phrase: "ڀلي ڪري آيا. مهرباني ڪري پاڻ بابت ٻڌايو." },
+        { name: "Mizo", phrase: "Ka lawm e. I lawmthu sawi rawh." },
+        { name: "Bodo", phrase: "विजयफ। गwjwng नि बfwrwwn बwi." },
+        { name: "Garhwali", phrase: "स्वागत छ। कृपया अपने बारे में बताओ।" },
+        { name: "Bhili", phrase: "स्वागत छे। कृपया अपने बारे में बताओ।" },
+        { name: "Gondi", phrase: "स्वागत। कृपया अपने बारे में बताएं।" },
+        { name: "Khasi", phrase: "Sngewbha. Melei ia thuh pat ia lade." },
+        { name: "Lepcha", phrase: "ᰛᰩᰵᰛᰦᰢ। ᰛᰶᰱᰵᰛ ᰪ᰷ᰬ᰷ᰢᰧ ᰵ᰷ᰵ᰷ᰪᰵᰴ᰷ᰬᰲᰧ।" },
+        { name: "Sanskrit", phrase: "स्वागतम्। कृपया आत्मनः विषयं वदतु।" },
+        { name: "English", phrase: "Welcome! Please tell us about yourself." },
+        { name: "Haryanvi", phrase: "स्वागत स। अपने बारे में बताओ।" },
+        { name: "Awadhi", phrase: "स्वागत बा। अपने बारे में बताइए।" },
+        { name: "Chhattisgarhi", phrase: "स्वागत हे। कृपया अपन बारे में बताव।" },
+        { name: "Nagpuri", phrase: "स्वागत अछी। कृपया अपने बारे में बताइए।" },
+        { name: "Kumaoni", phrase: "स्वागत छु। अपने बारे में बताओ।" },
+        { name: "Rajasthani", phrase: "स्वागत है। कृपया अपने बारे में बताइए।" },
+        { name: "Bhatneri", phrase: "स्वागत। अपने बारे में बताओ।" },
+        { name: "Bundeli", phrase: "स्वागत। कृपया अपने बारे में बताइए।" },
+        { name: "Sourashtra", phrase: "வரவேற்கிறோம். உங்கள் பற்றி சொல்லுங்கள்." },
+        { name: "Kodava", phrase: "ಸ್ವಾಗತ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಬಗ್ಗೆ ಹೇಳಿ." },
+        { name: "Ho", phrase: "ᱵᱟᱝᱞᱟ ᱮᱱᱟ। ᱟᱞᱮᱱ ᱠᱷᱚᱸᱛᱟᱞᱟ।" },
+        { name: "Banjara", phrase: "स्वागत। अपने बारे में बताइए।" },
+        { name: "Kurukh", phrase: "सुआगत। अपने बारे में बताइए।" },
+        { name: "Kharia", phrase: "सुआगत। अपने बारे में बताइए।" },
+        { name: "Mundari", phrase: "ᱟᱵᱮᱞᱜ। ᱢᱩᱱᱜ ᱢᱮᱨᱟᱹᱜ ᱨᱤ।" },
+        { name: "Marwari", phrase: "स्वागत है। कृपया अपने बारे में बताइए।" },
+        { name: "Pahari", phrase: "स्वागत छ। कृपया अपने बारे में बताओ।" },
+        { name: "Tirhuti", phrase: "स्वागतम्। कृपया अपने बारे में बताऊ।" },
+        { name: "Sambalpuri", phrase: "ସ୍ଵାଗତ। ଦୟାକରି ଆପଣଙ୍କ ବିଷୟରେ କହନ୍ତୁ।" }
     ];
+    
 
-    // Fetch and load voices on component mount
-    useEffect(() => {
-        const loadVoices = () => {
-            const availableVoices = speechSynthesis.getVoices();
-            setVoices(availableVoices);
-        };
-
-        loadVoices();
-
-        // Listen for voices to be loaded
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = loadVoices;
-        }
-    }, []);
-
-    const handleLanguageClick = (englishPhrase, phrase) => {
-        if (voices.length === 0) {
-            alert("No voices available yet. Please wait.");
-            return;
-        }
-
-        // Find a suitable voice (preferably in English for transliteration)
-        const voice = voices.find(v => v.lang.includes('en')) || voices[0]; // Default to English or fallback to first voice
-        const utteranceEnglish = new SpeechSynthesisUtterance(englishPhrase);
-        utteranceEnglish.voice = voice;
-
-        // Speak the English phrase first
-        speechSynthesis.speak(utteranceEnglish);
-
-        // Then speak the native language phrase
-        const utteranceNative = new SpeechSynthesisUtterance(phrase);
-        utteranceNative.voice = voice;
-        speechSynthesis.speak(utteranceNative);
+    const handleLanguageClick = (language) => {
+        setSelectedLanguage(language);
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-500 to-teal-400">
-            <h1 className="text-white text-3xl font-bold mb-6">Choose Your Language</h1>
-            <p className="text-white text-lg mb-8">
-                Click or speak to select your preferred language.
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-                {languages.map((lang, index) => (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-400 relative overflow-hidden">
+            {/* Decorative Background */}
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-indigo-500 to-teal-400 opacity-20 animate-pulse blur-lg"></div>
+
+            {/* Header Section */}
+            <h1 className="text-white text-4xl md:text-5xl font-extrabold mb-10 drop-shadow-lg text-center">
+                Choose Your Language
+            </h1>
+
+            {/* Language Selection */}
+            {selectedLanguage ? (
+                <div className="text-center bg-white p-10 rounded-lg shadow-xl transform transition duration-500 hover:scale-105">
+                    <h2 className="text-3xl font-bold text-gray-800 mb-6">
+                        {selectedLanguage.name}
+                    </h2>
+                    <p className="text-lg text-gray-600">{selectedLanguage.phrase}</p>
                     <button
-                        key={index}
-                        className="bg-white p-4 rounded-lg shadow-lg text-center hover:bg-teal-100 transition duration-300"
-                        onClick={() => handleLanguageClick(lang.englishPhrase, lang.phrase)}
+                        className="mt-8 bg-teal-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-teal-600 transition"
+                        onClick={() => setSelectedLanguage(null)}
                     >
-                        <p className="text-xl font-semibold">{lang.name}</p>
-                        <p className="text-lg mt-1">{lang.phrase} ({lang.englishPhrase})</p>
+                        Back to Language Selection
                     </button>
-                ))}
-            </div>
+                </div>
+            ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 p-6 bg-opacity-75 rounded-lg">
+                    {languages.map((lang, index) => (
+                        <button
+                            key={index}
+                            className="bg-white p-6 rounded-lg shadow-lg hover:bg-indigo-100 transform hover:scale-105 transition duration-300"
+                            onClick={() => handleLanguageClick(lang)}
+                        >
+                            <p className="text-xl font-bold text-gray-800">{lang.name}</p>
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

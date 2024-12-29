@@ -11,6 +11,7 @@ const BachatSaathiPage = () => {
   useEffect(() => {
     const storedFormData = localStorage.getItem("villagerFormData");
     const storedRecommendations = localStorage.getItem("recommendations");
+    const storedSavingsPlan = localStorage.getItem("savingsPlan");
 
     if (storedFormData) {
       setFormData(JSON.parse(storedFormData));
@@ -25,6 +26,11 @@ const BachatSaathiPage = () => {
       if (storedFormData) {
         getRecommendation(JSON.parse(storedFormData));
       }
+    }
+
+    // If savings plan is already in localStorage, set it
+    if (storedSavingsPlan) {
+      setSavingsPlan(storedSavingsPlan);
     }
   }, []);
 
@@ -79,6 +85,9 @@ const BachatSaathiPage = () => {
 
       const result = await response.json();
       setSavingsPlan(result.savingsPlan); // Store the generated savings plan
+
+      // Store savings plan in localStorage
+      localStorage.setItem("savingsPlan", result.savingsPlan);
     } catch (err) {
       setError("Error while fetching savings plan: " + err.message);
     }

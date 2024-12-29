@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 const LanguageSelection = () => {
     const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const [isRecording, setIsRecording] = useState(false);
+    const [audioBlob, setAudioBlob] = useState(null);
+    const mediaRecorderRef = useRef(null);
 
     const languages = [
         { name: "Hindi", phrase: "स्वागत है। कृपया अपने बारे में बताएं।" },
@@ -12,7 +15,7 @@ const LanguageSelection = () => {
         { name: "Kannada", phrase: "ಸ್ವಾಗತ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಬಗ್ಗೆ ಹೇಳಿ." },
         { name: "Punjabi", phrase: "ਸੁਆਗਤ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਬਾਰੇ ਦੱਸੋ।" },
         { name: "Marathi", phrase: "स्वागत आहे. कृपया तुमच्याबद्दल सांगा." },
-        { name: "Malayalam", phrase: "സ്വാഗതം. ദയവായി നിങ്ങളുടെ കാര്യത്തിന് പറയുക." },
+        { name: "Malayalam", phrase: "സ്വാഗതം. ദയവായി നിങ്ങളുടെ കാര്യം പറയുക." },
         { name: "Odia", phrase: "ସ୍ଵାଗତ। ଦୟାକରି ଆପଣଙ୍କ ବିଷୟରେ କହନ୍ତୁ।" },
         { name: "Assamese", phrase: "স্বাগতম। অনুগ্ৰহ কৰি আপোনাৰ বিষয়ে ক'ব।" },
         { name: "Maithili", phrase: "स्वागतम्। कृपया अपने बारे में बताऊ।" },
@@ -35,6 +38,8 @@ const LanguageSelection = () => {
         { name: "Haryanvi", phrase: "स्वागत स। अपने बारे में बताओ।" },
         { name: "Awadhi", phrase: "स्वागत बा। अपने बारे में बताइए।" },
         { name: "Chhattisgarhi", phrase: "स्वागत हे। कृपया अपन बारे में बताव।" },
+        { name: "Manipuri", phrase: "ꯑꯅꯤꯗꯕꯦꯝꯗ꯭ꯕꯤ। ꯑꯪꯄꯨꯗꯝ ꯌꯥꯎꯂꯩꯀꯗꯥ ꯑꯗꯁꯤꯡꯅꯤ।" },
+        { name: "Tripuri", phrase: "ꯑꯗꯨꯔꯕꯦꯝꯖꯤ। ꯑꯣꯏꯕꯨꯁꯅꯤꯗꯕꯨꯒꯤ।" },
         { name: "Nagpuri", phrase: "स्वागत अछी। कृपया अपने बारे में बताइए।" },
         { name: "Kumaoni", phrase: "स्वागत छु। अपने बारे में बताओ।" },
         { name: "Rajasthani", phrase: "स्वागत है। कृपया अपने बारे में बताइए।" },
@@ -52,46 +57,99 @@ const LanguageSelection = () => {
         { name: "Tirhuti", phrase: "स्वागतम्। कृपया अपने बारे में बताऊ।" },
         { name: "Sambalpuri", phrase: "ସ୍ଵାଗତ। ଦୟାକରି ଆପଣଙ୍କ ବିଷୟରେ କହନ୍ତୁ।" }
     ];
+    
 
-    const handleLanguageClick = (language) => {
+    const handleLanguageClick = async (language) => {
         setSelectedLanguage(language);
+
+        // Request microphone permission and start recording
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorderRef.current = mediaRecorder;
+
+            const chunks = [];
+            mediaRecorder.ondataavailable = (event) => chunks.push(event.data);
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
+                setAudioBlob(blob);
+            };
+
+            mediaRecorder.start();
+            setIsRecording(true);
+        } catch (err) {
+            console.error("Microphone access denied:", err);
+        }
     };
 
-    const closeModal = () => {
+    const stopRecording = () => {
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        }
+    };
+
+    const closeLanguageModal = () => {
         setSelectedLanguage(null);
+        setAudioBlob(null);
+        setIsRecording(false);
+    };
+
+    const playAudio = () => {
+        if (audioBlob) {
+            const audioURL = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioURL);
+            audio.play();
+        }
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-500 to-teal-400 relative overflow-hidden">
-            <div className={`${selectedLanguage ? 'backdrop-blur-2xl' : 'backdrop-blur-lg'} w-full h-full absolute top-0 left-0 z-20 flex items-center justify-center`}>
-                {/* Decorative Background */}
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-indigo-500 to-teal-400 opacity-20 animate-pulse blur-lg"></div>
-
-                {/* Language Cards */}
-                <div className={`grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-6 gap-5 bg-opacity-75 rounded-lg w-full max-w-screen-xl`}>
-                    {languages.map((lang, index) => (
-                        <button
-                            key={index}
-                            className="bg-white p-3 rounded-lg shadow-lg hover:bg-indigo-100 transform hover:scale-95 transition duration-300"
-                            onClick={() => handleLanguageClick(lang)}
-                        >
-                            <p className="text-xl font-bold text-gray-800">{lang.name}</p>
-                        </button>
-                    ))}
-                </div>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-500 to-teal-400 relative">
+            <h1 className="text-white text-3xl font-bold mb-6">Choose Your Language</h1>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-6">
+                {languages.map((lang, index) => (
+                    <button
+                        key={index}
+                        className="bg-white p-4 rounded-lg shadow-lg text-center hover:bg-teal-100 transition duration-300"
+                        onClick={() => handleLanguageClick(lang)}
+                    >
+                        <p className="text-xl font-semibold">{lang.name}</p>
+                    </button>
+                ))}
             </div>
 
-            {/* Modal for Selected Language */}
             {selectedLanguage && (
-                <div className="z-20 fixed inset-0 bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-auto relative z-50 flex flex-col items-center justify-center">
-                    <h2 className="text-3xl font-bold text-gray-800 mb-6">{selectedLanguage.name}</h2>
-                    <p className="text-lg text-gray-600">{selectedLanguage.phrase}</p>
-                    <button
-                        className="mt-8 bg-teal-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-teal-600 transition"
-                        onClick={closeModal}
-                    >
-                        Back to Language Selection
-                    </button>
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+                    <div className="bg-white p-8 rounded-lg shadow-lg w-80 text-center relative">
+                        {/* Close Button (X) */}
+                        <button
+                            className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
+                            onClick={closeLanguageModal}
+                        >
+                            &times;
+                        </button>
+
+                        <h2 className="text-2xl font-semibold mb-4">{selectedLanguage.name}</h2>
+                        <p className="text-xl">{selectedLanguage.phrase}</p>
+
+                        {isRecording ? (
+                            <button
+                                className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition"
+                                onClick={stopRecording}
+                            >
+                                Stop Recording
+                            </button>
+                        ) : (
+                            <button
+                                className="mt-4 bg-teal-500 text-white px-4 py-2 rounded-lg shadow hover:bg-teal-600 transition"
+                                onClick={playAudio}
+                                disabled={!audioBlob}
+                            >
+                                Play Recording
+                            </button>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

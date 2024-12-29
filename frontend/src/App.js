@@ -6,6 +6,8 @@ import TransactionForm from "./pages/TransactionForm";
 import BachatSaathiPage from "./pages/BachatSaathi";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import CreativeSavingsPlanPage from "./pages/SavingsPage";
+import SmartNiveshPage from "./pages/SmartNivesh";
 
 function App() {
   return (
@@ -16,8 +18,10 @@ function App() {
           <Route path="/salahsakhi" element={<SalahSakhi />} />
           <Route path="/detail" element={<TransactionForm />} />
           <Route path="/bachat-saathi" element={<BachatSaathiPage />} />
+          <Route path="/smart-nivesh" element={<SmartNiveshPage />} />
           <Route path="/signup" element={<Signup/>} />
           <Route path="/login" element={<Login/>} />
+          <Route path="/savings-plan" element={<CreativeSavingsPlanPage />} />
         </Routes>
       </div>
     </Router>

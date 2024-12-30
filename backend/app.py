@@ -5,7 +5,12 @@ import re  # For regular expressions
 import os
 import requests
 from moviepy.editor import ImageSequenceClip, AudioFileClip, concatenate_videoclips
+from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
+from moviepy.audio.io.AudioFileClip import AudioFileClip
 from gtts import gTTS
+import time
+import tempfile
+import uuid
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources={r"*": {"origins": "http://localhost:3000"}})
@@ -25,6 +30,11 @@ VIDEO_STORAGE_DIR = "chapter_videos"
 
 os.makedirs(IMAGE_STORAGE_DIR, exist_ok=True)
 os.makedirs(VIDEO_STORAGE_DIR, exist_ok=True)
+
+# Ensure the directory for the video exists
+def ensure_directory_exists(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 @app.route('/recommendation', methods=['POST'])
 def generate_recommendation():
@@ -415,23 +425,24 @@ def save_story():
         print(f"Error while generating story: {e}")
         return jsonify({"message": "Error generating story"}), 500
     
+
+
 @app.route('/save-story-lines', methods=['POST'])
 def save_story_lines():
     data = request.json
     chapter_id = data.get('chapterId')  # Get chapter ID
     lines = data.get('lines', [])       # Get story lines
     full_story = data.get('story', "")  # Full story for voiceover
-    print(full_story)
 
     if not chapter_id or not lines:
         return jsonify({"error": "Chapter ID and lines are required"}), 400
 
     chapter_dir = os.path.join(IMAGE_STORAGE_DIR, f"chapter_{chapter_id}")
-    os.makedirs(chapter_dir, exist_ok=True)
+    ensure_directory_exists(chapter_dir)
 
     image_paths = []
 
-    # Download images
+    # Download images for each story line
     for index, line in enumerate(lines):
         prompt = line
         try:
@@ -441,7 +452,6 @@ def save_story_lines():
                 with open(image_path, "wb") as image_file:
                     image_file.write(response.content)
                 image_paths.append(image_path)
-                print(f"Image saved: {image_path}")
             else:
                 print(f"Failed to generate image for line {index + 1}: {prompt}")
         except Exception as e:
@@ -452,28 +462,53 @@ def save_story_lines():
     try:
         tts = gTTS(full_story)
         tts.save(audio_path)
-        print(f"Voiceover saved: {audio_path}")
     except Exception as e:
         print(f"Error generating voiceover: {e}")
         return jsonify({"error": "Failed to generate voiceover"}), 500
 
-    # Create video from images and voiceover
-    video_path = os.path.join(VIDEO_STORAGE_DIR, f"chapter_{chapter_id}.mp4")
+    # Generate the video from images and audio
+    video_path = os.path.join(VIDEO_STORAGE_DIR, f"chapter_{chapter_id}_{uuid.uuid4()}.mp4")
+    ensure_directory_exists(VIDEO_STORAGE_DIR)
+
     try:
-        clip = ImageSequenceClip(image_paths, fps=1)  # 1 image per second
-        audio = AudioFileClip(audio_path)
-        clip = clip.set_audio(audio)
-        clip.write_videofile(video_path, codec="libx264", audio_codec="aac")
+        # Load the voiceover audio clip
+        audio_clip = AudioFileClip(audio_path)
+
+        # Calculate the duration for each image based on the total audio duration
+        image_duration = audio_clip.duration / len(image_paths)
+
+        # Create a video clip with images that play for calculated duration
+        video_clip = ImageSequenceClip(image_paths, durations=[image_duration] * len(image_paths))
+
+        # Set the FPS for the video (adjust if needed)
+        video_clip.fps = 24  # Set fps (frames per second)
+
+        # Set the audio to the video clip
+        video_clip = video_clip.set_audio(audio_clip)
+
+        # Write the video to a file, with a unique path to avoid conflicts
+        video_clip.write_videofile(video_path, codec="libx264", audio_codec="aac", fps=24)
+
+        # Allow time for the process to finish
+        time.sleep(2)
+
+        # Cleanup temporary files and resources
+        video_clip.close()
+        audio_clip.close()
+
+        # Delete temporary audio file (if any)
+        temp_audio_file = 'chapter_1TEMP_MPY_wvf_snd.mp4'
+        if os.path.exists(temp_audio_file):
+            os.remove(temp_audio_file)
+
         print(f"Video created: {video_path}")
+        return jsonify({
+            "message": "Story lines processed successfully",
+            "video_url": video_path
+        })
     except Exception as e:
         print(f"Error generating video: {e}")
         return jsonify({"error": "Failed to generate video"}), 500
-
-    return jsonify({
-        "message": "Story lines processed successfully",
-        "video_url": video_path
-    })
-
 
 if __name__ == '__main__':
     app.run(debug=True)

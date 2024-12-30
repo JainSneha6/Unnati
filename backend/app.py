@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import google.generativeai as genai  # Assuming you're using Gemini for recommendation generation
 from flask_cors import CORS
 import re  # For regular expressions
@@ -10,6 +10,7 @@ from gtts import gTTS
 import time
 import tempfile
 import uuid
+from werkzeug.exceptions import NotFound
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources={r"*": {"origins": "http://localhost:3000"}})
@@ -425,15 +426,14 @@ def save_story():
         return jsonify({"message": "Error generating story"}), 500
 
 
-def create_audio_from_text(text):
+def create_audio_from_text(text, lang='hi'):
     audio_file = f"temp_audio_{uuid.uuid4().hex}.mp3"
-    tts = gTTS(text=text)
+    tts = gTTS(text=text, lang=lang)
     tts.save(audio_file)
     return audio_file
 
 
-# Function to create a video from images and the generated audio
-def create_video_from_images_and_audio(image_paths, audio_file):
+def create_video_from_images_and_audio(image_paths, audio_file, chapter_id):
     audio_clip = AudioFileClip(audio_file)
     audio_duration = audio_clip.duration
     image_clips = []
@@ -452,8 +452,8 @@ def create_video_from_images_and_audio(image_paths, audio_file):
     # Set audio for the video
     video_with_audio = video.set_audio(audio_clip)
 
-    # Save the video
-    video_file = f"temp_video_{uuid.uuid4().hex}.mp4"
+    # Save the video in the 'chapter_videos' directory with the name 'chapter_{chapter_id}.mp4'
+    video_file = os.path.join(VIDEO_STORAGE_DIR, f"chapter_{chapter_id}.mp4")
     video_with_audio.write_videofile(video_file, fps=24)
 
     # Ensure MoviePy releases file handles
@@ -462,8 +462,6 @@ def create_video_from_images_and_audio(image_paths, audio_file):
 
     return video_file
 
-
-# Flask endpoint to save the story lines and create a video with audio
 @app.route('/save-story-lines', methods=['POST'])
 def save_story_lines():
     data = request.json
@@ -501,10 +499,12 @@ def save_story_lines():
     audio_file = create_audio_from_text(full_story)
 
     # Create the video from images and audio
-    video_file = create_video_from_images_and_audio(image_paths, audio_file)
+    video_file = create_video_from_images_and_audio(image_paths, audio_file, chapter_id)
 
-    return jsonify({"video_file": video_file}), 200
-
+    try:
+        return send_file(video_file, mimetype='video/mp4')
+    except FileNotFoundError:
+        return NotFound('Video file not found')
 
 if __name__ == '__main__':
     app.run(debug=True)

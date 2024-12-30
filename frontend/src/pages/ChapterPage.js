@@ -7,6 +7,7 @@ const ChapterPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [storyLines, setStoryLines] = useState([]);
+    const [videoUrl, setVideoUrl] = useState(""); // State to store the video URL
 
     // Sample data for chapters (this can be fetched dynamically)
     const chapters = {
@@ -21,8 +22,6 @@ const ChapterPage = () => {
     const chapter = chapters[id];
 
     // Function to send story lines to the backend separately
-    // Function to send story lines to the backend separately
-    // Function to send story and story lines to the backend
     const sendStoryLinesToBackend = (story, lines) => {
         const requestData = {
             chapterId: id, // Include chapter ID
@@ -38,16 +37,15 @@ const ChapterPage = () => {
             },
             body: JSON.stringify(requestData),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Story and lines successfully sent to the backend:", data);
+            .then((response) => response.blob()) // Expect a video blob in response
+            .then((videoBlob) => {
+                const videoUrl = URL.createObjectURL(videoBlob); // Create URL for the video blob
+                setVideoUrl(videoUrl); // Set the video URL for playback
             })
             .catch((error) => {
                 console.error("Failed to send story and lines to the backend:", error);
             });
     };
-
-
 
     useEffect(() => {
         const storedStory = localStorage.getItem(`story_${id}`);
@@ -97,7 +95,6 @@ const ChapterPage = () => {
         }
     }, [id, chapter?.title]);
 
-
     // Function to send the story to the backend if lines are not available
     const sendStoryToBackend = (story) => {
         const requestData = { story };
@@ -125,8 +122,6 @@ const ChapterPage = () => {
             });
     };
 
-
-
     return (
         <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-500 flex flex-col items-center justify-center p-8">
             <div className="bg-white p-8 rounded-lg shadow-xl max-w-3xl w-full">
@@ -153,6 +148,16 @@ const ChapterPage = () => {
                                 )}
                             </ul>
                         </div>
+
+                        {videoUrl && (
+                            <div className="mt-6">
+                                <h3 className="font-semibold text-teal-500">Generated Video:</h3>
+                                <video controls className="w-full max-w-3xl mt-4">
+                                    <source src={videoUrl} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

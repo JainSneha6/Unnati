@@ -9,6 +9,8 @@ import Login from "./pages/Login";
 import CreativeSavingsPlanPage from "./pages/SavingsPage";
 import SmartNiveshPage from "./pages/SmartNivesh";
 import LanguageSelection from "./pages/LanguageSelection";
+import KahaniKosh from "./pages/KahaniKosh";
+import ChapterPage from "./pages/ChapterPage";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/" element={<LanguageSelection />} />
           <Route path="/home" element={<Home />} />
           <Route path="/salahsakhi" element={<SalahSakhi />} />
+          <Route path="/kahani-kosh" element={<KahaniKosh />} />
+          <Route path="/chapter/:id" element={<ChapterPage />} />
           <Route path="/detail" element={<TransactionForm />} />
           <Route path="/bachat-saathi" element={<BachatSaathiPage />} />
           <Route path="/smart-nivesh" element={<SmartNiveshPage />} />

@@ -1,10 +1,15 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+
 
 const LanguageSelection = () => {
     const [selectedLanguage, setSelectedLanguage] = useState(null);
     const [isRecording, setIsRecording] = useState(false);
     const [audioBlob, setAudioBlob] = useState(null);
+    const [loading, setLoading] = useState(false);
     const mediaRecorderRef = useRef(null);
+    const navigate = useNavigate();
+    const [location, setLocation] = useState(null);
 
     const languages = [
         { name: "Hindi", phrase: "स्वागत है। कृपया अपने बारे में बताएं।" },
@@ -57,7 +62,28 @@ const LanguageSelection = () => {
         { name: "Tirhuti", phrase: "स्वागतम्। कृपया अपने बारे में बताऊ।" },
         { name: "Sambalpuri", phrase: "ସ୍ଵାଗତ। ଦୟାକରି ଆପଣଙ୍କ ବିଷୟରେ କହନ୍ତୁ।" }
     ];
-    
+
+    useEffect(() => {
+        // Get user's location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    };
+                    setLocation(userLocation);
+                    // Save location to localStorage
+                    localStorage.setItem("userLocation", JSON.stringify(userLocation));
+                },
+                (error) => {
+                    console.error("Error getting location:", error);
+                    // Fallback if location permission is denied
+                    setLocation({ latitude: null, longitude: null });
+                }
+            );
+        }
+    }, []);
 
     const handleLanguageClick = async (language) => {
         setSelectedLanguage(language);
@@ -72,8 +98,34 @@ const LanguageSelection = () => {
             mediaRecorder.ondataavailable = (event) => chunks.push(event.data);
 
             mediaRecorder.onstop = () => {
-                const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
+                const blob = new Blob(chunks, { type: "audio/wav" }); // Using .wav for consistency
                 setAudioBlob(blob);
+
+                // Automatically send audio to backend after stop
+                if (blob) {
+                    const formData = new FormData();
+                    formData.append("audio", blob, "recording.wav"); // Ensure the file extension is .wav
+
+                    setLoading(true); // Show loading state while waiting for response
+                    fetch("http://localhost:5000/detect_language", {
+                        method: "POST",
+                        body: formData,
+                    })
+                        .then((response) => response.json())
+                        .then((result) => {
+                            console.log("Detected Language:", result.language);
+                            setLoading(false);
+
+                            // Store the language and dialect in localStorage
+                            const languageAndDialect = result.language || "Unknown";
+                            localStorage.setItem("languageAndDialect", JSON.stringify(languageAndDialect));
+                            navigate('/home'); // Redirect to home page
+                        })
+                        .catch((error) => {
+                            console.error("Error sending audio to backend:", error);
+                            setLoading(false);
+                        });
+                }
             };
 
             mediaRecorder.start();
@@ -82,6 +134,8 @@ const LanguageSelection = () => {
             console.error("Microphone access denied:", err);
         }
     };
+
+
 
     const stopRecording = () => {
         if (mediaRecorderRef.current) {
@@ -149,6 +203,10 @@ const LanguageSelection = () => {
                                 Play Recording
                             </button>
                         )}
+
+                        {loading ? (
+                            <p className="mt-4 text-blue-500">Sending audio...</p>
+                        ) : null}
                     </div>
                 </div>
             )}

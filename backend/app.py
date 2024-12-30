@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify
 import google.generativeai as genai  # Assuming you're using Gemini for recommendation generation
 from flask_cors import CORS
 import re  # For regular expressions
+import os
+import requests
+from moviepy.editor import ImageSequenceClip, AudioFileClip, concatenate_videoclips
+from gtts import gTTS
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources={r"*": {"origins": "http://localhost:3000"}})
@@ -11,6 +15,16 @@ API_KEY = "AIzaSyAzTFzVpFhUirCtW-_4tYFyJ88X7hsykGw"
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
+# Ensure 'uploads' directory exists
+if not os.path.exists('uploads'):
+    os.makedirs('uploads')
+
+# Directory to store images
+IMAGE_STORAGE_DIR = "chapter_images"
+VIDEO_STORAGE_DIR = "chapter_videos"
+
+os.makedirs(IMAGE_STORAGE_DIR, exist_ok=True)
+os.makedirs(VIDEO_STORAGE_DIR, exist_ok=True)
 
 @app.route('/recommendation', methods=['POST'])
 def generate_recommendation():
@@ -260,6 +274,205 @@ def generate_investment_description():
     except Exception as e:
         print(f"Error while generating investment description: {e}")
         return jsonify({"message": "Error generating investment description"}), 500
+
+
+
+@app.route('/detect_language', methods=['POST'])
+def detect_language():
+    if 'audio' not in request.files:
+        return jsonify(message='No audio file provided!'), 400
+
+    audio_file = request.files['audio']
+
+    # Ensure uploads folder exists
+    uploads_folder = 'uploads'
+    if not os.path.exists(uploads_folder):
+        os.makedirs(uploads_folder)
+
+    audio_path = os.path.join(uploads_folder, 'recording_audio.mp3')  # Ensure mp3 extension
+    audio_file.save(audio_path)
+
+    # Continue with the logic after saving the file
+    try:
+        user_audio_file = genai.upload_file(path=audio_path)
+
+        # Create the prompt to detect language and dialect
+        prompt = (
+            f"Identify the language and dialect of the following audio. "
+            f"Give in the following format: "
+            f"Language:[Language Name] - Dialect:[Dialect Name]"
+        )
+
+        response = model.generate_content([user_audio_file, prompt])
+        detected_text = response.text # Assuming the response has content
+
+        # Use regex to extract language and dialect
+        match = re.search(r"Language:\s*(.*?)\s*-\s*Dialect:\s*(.*)", detected_text)
+        if match:
+            language = match.group(1).strip()
+            dialect = match.group(2).strip()
+            return jsonify(language=language, dialect=dialect)
+        else:
+            return jsonify(message="Failed to extract language and dialect."), 400
+
+    except Exception as e:
+        return jsonify(message=str(e)), 500
+
+
+@app.route('/generate-story', methods=['POST'])
+def generate_story():
+    try:
+        # Get the request data
+        data = request.json
+        print(data)
+        # Extract chapter title, language, location, and form data
+        chapter_title = data.get("chapterTitle")
+        language_and_dialect = data.get("languageAndDialect")
+        location = data.get("location")
+        villager_form_data = data.get("villagerFormData")
+
+        if not chapter_title or not language_and_dialect or not location or not villager_form_data:
+            return jsonify({"message": "Missing required data"}), 400
+
+        # Prepare the request payload to send to Gemini (or the model of your choice)
+        prompt = (
+    f"Chapter Title: {chapter_title}\n"
+    f"Language and Dialect: {language_and_dialect}\n"
+    f"Location: {location}\n"
+    f"Villager Name: {villager_form_data.get('name')}\n"
+    f"Villager Age: {villager_form_data.get('age')}\n"
+    f"Villager Family Size: {villager_form_data.get('familySize')}\n"
+    f"Villager Occupation: {', '.join(villager_form_data.get('occupation', []))}\n"
+    f"Villager Monthly Income: {villager_form_data.get('monthlyIncome')}\n"
+    f"Villager Savings Goals: {', '.join(villager_form_data.get('savingsGoals', []))}\n"
+    f"\n"
+    f"Create a 2-3 minute long concise story based on the above information, with the main focus being the chapter title. "
+    f"The protagonist of the story should be the villager, and the story should explain the chapter in an engaging and easy-to-understand way. "
+    f"The story should be interesting and attractive and do not include any asterisk."
+)
+
+
+        # Send the data to Gemini API (or your model's API)
+        response = model.generate_content([prompt])
+        detected_text = response.text # Assuming the response has content
+        print(detected_text)
+        # Check the response from Gemini API
+        
+            
+        return jsonify({"story": detected_text}), 200
+        
+
+    except Exception as e:
+        print(f"Error while generating story: {e}")
+        return jsonify({"message": "Error generating story"}), 500
+    
+@app.route('/save-story', methods=['POST'])
+def save_story():
+    try:
+        # Get the request data
+        data = request.json
+        story = data.get("story")
+
+        if not story:
+            return jsonify({"message": "Story is missing"}), 400
+
+        # Prepare the request payload to send to Gemini (or your model of choice)
+        prompt = (
+            f"Here is a story:\n{story}\n"
+            "Summarize the story and break it into 10 key lines that describe key scenes, emotions, or elements of the story. "
+            "These lines should be suitable to use as prompts for an image generation API. "
+            "Each line should be clear, concise, and contain one key idea or scene from the story. "
+            "Please format the output as follows:\n"
+            "1. <line 1 description>\n"
+            "2. <line 2 description>\n"
+            "3. <line 3 description>\n"
+            "4. <line 4 description>\n"
+            "5. <line 5 description>\n"
+            "6. <line 6 description>\n"
+            "7. <line 7 description>\n"
+            "8. <line 8 description>\n"
+            "9. <line 9 description>\n"
+            "10. <line 10 description>\n"
+            f"Please follow the above format and give only the 10 lines."
+            f"Whatever the language of the story the output should be in English only."
+        )
+
+        # Send the data to Gemini API (or your model's API)
+        response = model.generate_content([prompt])
+        detected_text = response.text  # Assuming the response has content
+        print(detected_text)
+
+        # Assuming the response has the format with 10 lines, we can split them by newlines
+        lines = detected_text.strip().split("\n")
+
+        if len(lines) < 10:
+            return jsonify({"message": "Failed to generate 10 lines from the story"}), 400
+
+        # Return the 10 lines to be used for image generation
+        return jsonify({"lines": lines[:10]}), 200
+
+    except Exception as e:
+        print(f"Error while generating story: {e}")
+        return jsonify({"message": "Error generating story"}), 500
+    
+@app.route('/save-story-lines', methods=['POST'])
+def save_story_lines():
+    data = request.json
+    chapter_id = data.get('chapterId')  # Get chapter ID
+    lines = data.get('lines', [])       # Get story lines
+    full_story = data.get('story', "")  # Full story for voiceover
+    print(full_story)
+
+    if not chapter_id or not lines:
+        return jsonify({"error": "Chapter ID and lines are required"}), 400
+
+    chapter_dir = os.path.join(IMAGE_STORAGE_DIR, f"chapter_{chapter_id}")
+    os.makedirs(chapter_dir, exist_ok=True)
+
+    image_paths = []
+
+    # Download images
+    for index, line in enumerate(lines):
+        prompt = line
+        try:
+            response = requests.get(f"https://image.pollinations.ai/prompt/{prompt}")
+            if response.status_code == 200:
+                image_path = os.path.join(chapter_dir, f"line_{index + 1}.jpg")
+                with open(image_path, "wb") as image_file:
+                    image_file.write(response.content)
+                image_paths.append(image_path)
+                print(f"Image saved: {image_path}")
+            else:
+                print(f"Failed to generate image for line {index + 1}: {prompt}")
+        except Exception as e:
+            print(f"Error while generating image for line {index + 1}: {e}")
+
+    # Generate voiceover
+    audio_path = os.path.join(chapter_dir, "story_voiceover.mp3")
+    try:
+        tts = gTTS(full_story)
+        tts.save(audio_path)
+        print(f"Voiceover saved: {audio_path}")
+    except Exception as e:
+        print(f"Error generating voiceover: {e}")
+        return jsonify({"error": "Failed to generate voiceover"}), 500
+
+    # Create video from images and voiceover
+    video_path = os.path.join(VIDEO_STORAGE_DIR, f"chapter_{chapter_id}.mp4")
+    try:
+        clip = ImageSequenceClip(image_paths, fps=1)  # 1 image per second
+        audio = AudioFileClip(audio_path)
+        clip = clip.set_audio(audio)
+        clip.write_videofile(video_path, codec="libx264", audio_codec="aac")
+        print(f"Video created: {video_path}")
+    except Exception as e:
+        print(f"Error generating video: {e}")
+        return jsonify({"error": "Failed to generate video"}), 500
+
+    return jsonify({
+        "message": "Story lines processed successfully",
+        "video_url": video_path
+    })
 
 
 if __name__ == '__main__':

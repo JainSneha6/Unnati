@@ -12,6 +12,7 @@ import LanguageSelection from "./pages/LanguageSelection";
 import KahaniKosh from "./pages/KahaniKosh";
 import ChapterPage from "./pages/ChapterPage";
 import Saheli from "./pages/Saheli";
+import Nirnay from "./pages/Nirnay";
 
 function App() {
   return (
@@ -29,7 +30,8 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/savings-plan" element={<CreativeSavingsPlanPage />} />
-          <Route path="/saheli" element={<Saheli/>} />
+          <Route path="/saheli" element={<Saheli />} />
+          <Route path="/nirnay" element={<Nirnay />} />
         </Routes>
       </div>
     </Router>

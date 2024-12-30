@@ -5,9 +5,8 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 function GirlModel({ position, targetPosition }) {
     const { scene } = useGLTF("tara.glb"); // Replace with your 3D model path
 
-    // Animate movement towards the target position
     useFrame(() => {
-        if (position.x !== targetPosition.x || position.z !== targetPosition.z) {
+        if (targetPosition && (position.x !== targetPosition.x || position.z !== targetPosition.z)) {
             position.x += (targetPosition.x - position.x) * 0.05;
             position.z += (targetPosition.z - position.z) * 0.05;
         }
@@ -15,22 +14,21 @@ function GirlModel({ position, targetPosition }) {
 
     return <primitive object={scene} scale={1.5} position={[position.x, position.y, position.z]} rotation={[0.2, 0.5, 0]} />;
 }
-
 export default function Nirnay() {
     const [currentLevel, setCurrentLevel] = useState(0);
-    const [position, setPosition] = useState({ x: -16.5, y: 5, z: -7 });
+    const [position, setPosition] = useState({ x: -16, y: 5, z: -7 });
     const targetPositions = [
-        { x: -16.5, y: 5, z: -7 }, // Start
-        { x: -14, y: 3, z: -7 }, // Level 1
-        { x: -11, y: 1, z: -7 }, // Level 2
-        { x: -9, y: 0, z: -7 }, // Level 3
-        { x: -7, y: -1, z: -7 },   // Level 4
-        { x: 3, y: -2.3, z: 3 },   // Level 5
-        { x: 5, y: -2.3, z: 5 },   // Level 6
-        { x: 7, y: -2.3, z: 7 },   // Level 7
-        { x: 9, y: -2.3, z: 9 },   // Finish
+        { x: -16, y: 5, z: -7 }, // Start
+        { x: -12, y: 3.75, z: -7 },   // Level 1
+        { x: -8, y: 2.5, z: -7 },   // Level 2
+        { x: -4, y: 1.25, z: -7 },    // Level 3
+        { x: 0, y: 0, z: -7 },   // Level 4
+        { x: 4.25, y: -2, z: -7 },   // Level 5
+        { x: 8.5, y: -4, z: -7 },   // Level 6
+        { x: 12.75, y: -6, z: -7 },   // Level 7
+        { x: 17, y: -8, z: -7 },   // Finish
     ];
-
+    
     const questions = [
         { question: "What is 5 + 3?", answers: ["7", "8", "9"], correct: "8" },
         { question: "What is the capital of India?", answers: ["Delhi", "Mumbai", "Kolkata"], correct: "Delhi" },
@@ -40,18 +38,19 @@ export default function Nirnay() {
         { question: "Who painted the Mona Lisa?", answers: ["Van Gogh", "Da Vinci", "Picasso"], correct: "Da Vinci" },
         { question: "What is the boiling point of water?", answers: ["50°C", "100°C", "200°C"], correct: "100°C" },
         { question: "Who discovered gravity?", answers: ["Einstein", "Newton", "Galileo"], correct: "Newton" },
-    ];
+    ];    
 
     const handleAnswer = (answer) => {
         if (answer === questions[currentLevel].correct) {
-            if (currentLevel < targetPositions.length - 2) {
+            if (currentLevel < targetPositions.length - 1) {
                 setCurrentLevel((prev) => prev + 1);
                 setPosition(targetPositions[currentLevel + 1]);
-            } else {
-                alert("Congratulations! You completed the game!");
-            }
+            } 
         } else {
-            alert("Wrong answer! Try again.");
+            if (currentLevel > 0) {
+                setCurrentLevel((prev) => prev - 1);
+                setPosition(targetPositions[currentLevel - 1]);
+            }
         }
     };
 
@@ -68,7 +67,7 @@ export default function Nirnay() {
                     <ambientLight intensity={0.5} />
                     <directionalLight position={[5, 10, 5]} intensity={1} />
                     <GirlModel position={position} targetPosition={targetPositions[currentLevel + 1]} />
-                    <OrbitControls />
+                    <OrbitControls enableZoom={false} enableRotate={false} />
                 </Canvas>
             </div>
 

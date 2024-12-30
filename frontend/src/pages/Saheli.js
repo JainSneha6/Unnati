@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const Saheli = () => {
   const [activeSegment, setActiveSegment] = useState("Expert Advice");
   const [queries, setQueries] = useState([]);
   const [newQuery, setNewQuery] = useState("");
+  const navigate = useNavigate();
 
   // Hardcoded data for each segment
   const adviceList = [
@@ -77,21 +80,30 @@ const Saheli = () => {
     }
   };
 
+  const navigateToHomepage = () => {
+    navigate("/home");
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-500 text-white flex flex-col items-center py-10 px-4">
-      {/* Header */}
-      <header className="w-full max-w-6xl mb-8">
-        <h1 className="text-6xl font-extrabold text-center drop-shadow-lg">Saheli</h1>
-      </header>
+    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-500 flex flex-col items-center justify-center p-8">
+      <div className="flex items-center mb-6 w-full max-w-6xl ">
+        <button
+          onClick={navigateToHomepage}
+          className="flex items-center text-white-700 font-bold text-lg mr-4 hover:text-teal-800 transition"
+        >
+          {/* Arrow icon styled with CSS */}
+          <span className="material-icons">arrow_back</span>
+        </button>
+        <h1 className="ml-20 text-white text-5xl font-bold pl-20">Saheli</h1>
+      </div>
 
       {/* Navigation Buttons */}
       <nav className="flex flex-wrap justify-center gap-4 mb-8">
         {["Expert Advice", "Webinars", "FAQs", "Community Forum", "Tips", "Resources", "Success Stories", "Events"].map((segment) => (
           <button
             key={segment}
-            className={`px-4 py-2 rounded-lg ${
-              activeSegment === segment ? "bg-blue-600" : "bg-white text-blue-600"
-            }`}
+            className={`px-4 py-2 rounded-lg ${activeSegment === segment ? "bg-blue-600" : "bg-white text-blue-600"
+              }`}
             onClick={() => setActiveSegment(segment)}
           >
             {segment}
@@ -237,7 +249,7 @@ const Saheli = () => {
           </section>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

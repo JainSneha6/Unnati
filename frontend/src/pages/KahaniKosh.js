@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const KahaniKosh = () => {
     // Sample chapters for financial literacy
+    const navigate = useNavigate();
+
     const chapters = [
         {
             title: "Introduction to Financial Literacy",
@@ -36,9 +39,23 @@ const KahaniKosh = () => {
         },
     ];
 
+    const navigateToHomepage = () => {
+        navigate("/home");
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-500 flex flex-col items-center justify-center p-8">
-            <h1 className="text-white text-4xl font-bold mb-8">KahaniKosh - Financial Literacy</h1>
+            <div className="flex items-center mb-6 w-full max-w-6xl ">
+                <button
+                    onClick={navigateToHomepage}
+                    className="flex items-center text-white-700 font-bold text-lg mr-4 hover:text-teal-800 transition"
+                >
+                    {/* Arrow icon styled with CSS */}
+                    <span className="material-icons">arrow_back</span>
+                </button>
+                <h1 className="ml-20 text-white text-5xl font-bold pl-20">KahaniKosh - Financial Literacy</h1>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
                 {chapters.map((chapter, index) => (
                     <div
@@ -58,6 +75,7 @@ const KahaniKosh = () => {
             </div>
         </div>
     );
-};
+}
+
 
 export default KahaniKosh;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ChapterPage = () => {
     const { id } = useParams();
@@ -8,6 +9,7 @@ const ChapterPage = () => {
     const [error, setError] = useState(null);
     const [storyLines, setStoryLines] = useState([]);
     const [videoUrl, setVideoUrl] = useState(""); // State to store the video URL
+    const navigate = useNavigate();
 
     // Sample data for chapters (this can be fetched dynamically)
     const chapters = {
@@ -122,36 +124,37 @@ const ChapterPage = () => {
             });
     };
 
+    const navigateTopage = () => {
+        navigate("/kahani-kosh");
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-500 flex flex-col items-center justify-center p-8">
             <div className="bg-white p-8 rounded-lg shadow-xl max-w-3xl w-full">
+                <button
+                    onClick={navigateTopage}
+                    className="flex items-center text-teal-700 font-bold text-lg mb-6 hover:text-teal-800 transition"
+                >
+                    {/* Arrow icon styled with CSS */}
+                    <span className="material-icons">arrow_back</span>
+                </button>
                 <h1 className="text-3xl font-bold text-teal-500">{chapter?.title}</h1>
-                <p className="mt-4 text-gray-700">{chapter?.content}</p>
+
                 {loading ? (
                     <p className="mt-4 text-gray-500">Loading the story...</p>
                 ) : error ? (
                     <p className="mt-4 text-red-500">{error}</p>
                 ) : (
                     <div className="mt-4 text-gray-700">
-                        <h2 className="font-semibold text-teal-500">Generated Story:</h2>
-                        <p>{story}</p>
+
 
                         <div className="mt-6">
-                            <h3 className="font-semibold text-teal-500">10 Lines for Image Generation:</h3>
-                            <ul className="list-disc pl-5">
-                                {storyLines.length > 0 ? (
-                                    storyLines.map((line, index) => (
-                                        <li key={index} className="text-gray-700">{line}</li>
-                                    ))
-                                ) : (
-                                    <p>No lines available for image generation.</p>
-                                )}
-                            </ul>
+
                         </div>
 
                         {videoUrl && (
                             <div className="mt-6">
-                                <h3 className="font-semibold text-teal-500">Generated Video:</h3>
+                                <h3 className="font-semibold text-teal-500"></h3>
                                 <video controls className="w-full max-w-3xl mt-4">
                                     <source src={videoUrl} type="video/mp4" />
                                     Your browser does not support the video tag.

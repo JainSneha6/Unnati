@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SalahSakhi = () => {
   const [messages, setMessages] = useState([
@@ -9,6 +10,7 @@ const SalahSakhi = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isListening, setIsListening] = useState(false);
+  const navigate = useNavigate();
 
   const speak = (messageText) => {
     if (!selectedVoice) return;
@@ -20,11 +22,11 @@ const SalahSakhi = () => {
     speech.rate = 1;
     speech.volume = 1;
     speech.pitch = 1;
-    
+
     speech.onstart = () => setIsSpeaking(true);
     speech.onend = () => setIsSpeaking(false);
     speech.onerror = () => setIsSpeaking(false);
-    
+
     window.speechSynthesis.speak(speech);
   };
 
@@ -35,13 +37,13 @@ const SalahSakhi = () => {
       const voices = window.speechSynthesis.getVoices();
       if (voices.length > 0 && !isLoaded) {
         const voice = voices.find(v => v.name.includes('Microsoft Zira')) ||
-                     voices.find(v => v.name.includes('Google UK English Female')) ||
-                     voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
-                     voices[0];
+          voices.find(v => v.name.includes('Google UK English Female')) ||
+          voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
+          voices[0];
 
         setSelectedVoice(voice);
         isLoaded = true;
-        
+
         setTimeout(() => {
           speak(messages[0].text);
         }, 100);
@@ -76,12 +78,12 @@ const SalahSakhi = () => {
 
         const data = await response.json();
         const botResponse = data.response || "Sorry, I didn't understand that.";
-        
+
         setMessages((prevMessages) => [
           ...prevMessages,
           { sender: "bot", text: botResponse },
         ]);
-        
+
         speak(botResponse);
         setIsBotTyping(false);
       } catch (error) {
@@ -115,12 +117,22 @@ const SalahSakhi = () => {
     recognition.start();
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-r from-blue-500 to-teal-400 text-white">
-      <header className="w-full py-10 text-center mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold">Salah Sakhi - Your Personal Financial Advisor</h1>
-      </header>
+  const navigateToHomepage = () => {
+    navigate("/home");
+  };
 
+  return (
+    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-500 flex flex-col items-center justify-center p-8">
+      <div className="flex items-center mb-6 w-full max-w-6xl ">
+        <button
+          onClick={navigateToHomepage}
+          className="flex items-center text-white-700 font-bold text-lg mr-4 hover:text-teal-800 transition"
+        >
+          {/* Arrow icon styled with CSS */}
+          <span className="material-icons">arrow_back</span>
+        </button>
+        <h1 className="ml-20 text-white text-5xl font-bold pl-20">Salah Sakhi - Your Personal Advisor</h1>
+      </div>
       <div className="flex flex-col md:flex-row justify-center items-start w-full p-6">
         <div className="sticky top-0 w-full md:w-1/3 flex justify-center p-6">
           <img

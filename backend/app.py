@@ -4,9 +4,8 @@ from flask_cors import CORS
 import re  # For regular expressions
 import os
 import requests
-from moviepy.editor import ImageSequenceClip, AudioFileClip, concatenate_videoclips
-from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
-from moviepy.audio.io.AudioFileClip import AudioFileClip
+from moviepy.editor import VideoFileClip, ImageClip, concatenate_videoclips, AudioFileClip
+from PIL import Image
 from gtts import gTTS
 import time
 import tempfile
@@ -346,20 +345,20 @@ def generate_story():
 
         # Prepare the request payload to send to Gemini (or the model of your choice)
         prompt = (
-    f"Chapter Title: {chapter_title}\n"
-    f"Language and Dialect: {language_and_dialect}\n"
-    f"Location: {location}\n"
-    f"Villager Name: {villager_form_data.get('name')}\n"
-    f"Villager Age: {villager_form_data.get('age')}\n"
-    f"Villager Family Size: {villager_form_data.get('familySize')}\n"
-    f"Villager Occupation: {', '.join(villager_form_data.get('occupation', []))}\n"
-    f"Villager Monthly Income: {villager_form_data.get('monthlyIncome')}\n"
-    f"Villager Savings Goals: {', '.join(villager_form_data.get('savingsGoals', []))}\n"
-    f"\n"
-    f"Create a 2-3 minute long concise story based on the above information, with the main focus being the chapter title. "
-    f"The protagonist of the story should be the villager, and the story should explain the chapter in an engaging and easy-to-understand way. "
-    f"The story should be interesting and attractive and do not include any asterisk."
-)
+            f"Chapter Title: {chapter_title}\n"
+            f"Language and Dialect: {language_and_dialect}\n"
+            f"Location: {location}\n"
+            f"Villager Name: {villager_form_data.get('name')}\n"
+            f"Villager Age: {villager_form_data.get('age')}\n"
+            f"Villager Family Size: {villager_form_data.get('familySize')}\n"
+            f"Villager Occupation: {', '.join(villager_form_data.get('occupation', []))}\n"
+            f"Villager Monthly Income: {villager_form_data.get('monthlyIncome')}\n"
+            f"Villager Savings Goals: {', '.join(villager_form_data.get('savingsGoals', []))}\n"
+            f"\n"
+            f"Create a 2-3 minute long concise story based on the above information, with the main focus being the chapter title. "
+            f"The protagonist of the story should be the villager, and the story should explain the chapter in an engaging and easy-to-understand way. "
+            f"The story should be interesting and attractive and do not include any asterisk."
+        )
 
 
         # Send the data to Gemini API (or your model's API)
@@ -424,9 +423,47 @@ def save_story():
     except Exception as e:
         print(f"Error while generating story: {e}")
         return jsonify({"message": "Error generating story"}), 500
-    
 
 
+def create_audio_from_text(text):
+    audio_file = f"temp_audio_{uuid.uuid4().hex}.mp3"
+    tts = gTTS(text=text)
+    tts.save(audio_file)
+    return audio_file
+
+
+# Function to create a video from images and the generated audio
+def create_video_from_images_and_audio(image_paths, audio_file):
+    audio_clip = AudioFileClip(audio_file)
+    audio_duration = audio_clip.duration
+    image_clips = []
+
+    # Set the duration for each image (for example, 5 seconds per image)
+    image_duration = audio_duration / len(image_paths)
+
+    for image_path in image_paths:
+        image_clip = ImageClip(image_path, duration=image_duration)
+        image_clip = image_clip.resize(height=720)  # Remove 'resample' argument
+        image_clips.append(image_clip)
+
+    # Concatenate image clips into a single video
+    video = concatenate_videoclips(image_clips, method="compose")
+
+    # Set audio for the video
+    video_with_audio = video.set_audio(audio_clip)
+
+    # Save the video
+    video_file = f"temp_video_{uuid.uuid4().hex}.mp4"
+    video_with_audio.write_videofile(video_file, fps=24)
+
+    # Ensure MoviePy releases file handles
+    video.close()
+    audio_clip.close()
+
+    return video_file
+
+
+# Flask endpoint to save the story lines and create a video with audio
 @app.route('/save-story-lines', methods=['POST'])
 def save_story_lines():
     data = request.json
@@ -457,58 +494,17 @@ def save_story_lines():
         except Exception as e:
             print(f"Error while generating image for line {index + 1}: {e}")
 
-    # Generate voiceover
-    audio_path = os.path.join(chapter_dir, "story_voiceover.mp3")
-    try:
-        tts = gTTS(full_story)
-        tts.save(audio_path)
-    except Exception as e:
-        print(f"Error generating voiceover: {e}")
-        return jsonify({"error": "Failed to generate voiceover"}), 500
+    if not image_paths:
+        return jsonify({"error": "No valid images generated for the story lines"}), 400
 
-    # Generate the video from images and audio
-    video_path = os.path.join(VIDEO_STORAGE_DIR, f"chapter_{chapter_id}_{uuid.uuid4()}.mp4")
-    ensure_directory_exists(VIDEO_STORAGE_DIR)
+    # Generate audio for the full story
+    audio_file = create_audio_from_text(full_story)
 
-    try:
-        # Load the voiceover audio clip
-        audio_clip = AudioFileClip(audio_path)
+    # Create the video from images and audio
+    video_file = create_video_from_images_and_audio(image_paths, audio_file)
 
-        # Calculate the duration for each image based on the total audio duration
-        image_duration = audio_clip.duration / len(image_paths)
+    return jsonify({"video_file": video_file}), 200
 
-        # Create a video clip with images that play for calculated duration
-        video_clip = ImageSequenceClip(image_paths, durations=[image_duration] * len(image_paths))
-
-        # Set the FPS for the video (adjust if needed)
-        video_clip.fps = 24  # Set fps (frames per second)
-
-        # Set the audio to the video clip
-        video_clip = video_clip.set_audio(audio_clip)
-
-        # Write the video to a file, with a unique path to avoid conflicts
-        video_clip.write_videofile(video_path, codec="libx264", audio_codec="aac", fps=24)
-
-        # Allow time for the process to finish
-        time.sleep(2)
-
-        # Cleanup temporary files and resources
-        video_clip.close()
-        audio_clip.close()
-
-        # Delete temporary audio file (if any)
-        temp_audio_file = 'chapter_1TEMP_MPY_wvf_snd.mp4'
-        if os.path.exists(temp_audio_file):
-            os.remove(temp_audio_file)
-
-        print(f"Video created: {video_path}")
-        return jsonify({
-            "message": "Story lines processed successfully",
-            "video_url": video_path
-        })
-    except Exception as e:
-        print(f"Error generating video: {e}")
-        return jsonify({"error": "Failed to generate video"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

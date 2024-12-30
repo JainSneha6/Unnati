@@ -87,7 +87,7 @@ const BachatSaathiPage = () => {
   };
 
   const navigateToHomepage = () => {
-    navigate("/");
+    navigate("/home");
   };
 
   return (

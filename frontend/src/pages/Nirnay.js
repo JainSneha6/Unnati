@@ -7,11 +7,11 @@ function GirlModel({ position, targetPosition }) {
     const { scene } = useGLTF("tara.glb"); // Replace with your 3D model path
 
     useFrame(() => {
-        if (targetPosition && (position.x !== targetPosition.x || position.z !== targetPosition.z)) {
+        if (targetPosition && (position.x !== targetPosition.x || position.z !== targetPosition.z || position.y !== targetPosition.y)) {
             // Smooth transition using easing effect
-            position.x += (targetPosition.x - position.x) * 0.5;
-            position.z += (targetPosition.z - position.z) * 0.5;
-            position.y += (targetPosition.y - position.y) * 0.5;
+            position.x += (targetPosition.x - position.x) * 0.05;
+            position.z += (targetPosition.z - position.z) * 0.05;
+            position.y += (targetPosition.y - position.y) * 0.1; // Smooth transition for height
         }
     });
 
@@ -20,18 +20,20 @@ function GirlModel({ position, targetPosition }) {
 
 export default function Nirnay() {
     const [currentLevel, setCurrentLevel] = useState(0);
-    const [position, setPosition] = useState({ x: -16, y: 5, z: -7 });
+    const [position, setPosition] = useState({ x: -16, y: -8, z: -7 });
     const [gameOver, setGameOver] = useState(false);  // To track if the player has won
+
+    // Define steps as target positions, adjusting the y-value for each step.
     const targetPositions = [
-        { x: -16, y: 5, z: -7 }, // Start
-        { x: -12, y: 3.75, z: -7 },   // Level 1
-        { x: -8, y: 2.5, z: -7 },   // Level 2
-        { x: -4, y: 1.25, z: -7 },    // Level 3
-        { x: 0, y: 0, z: -7 },   // Level 4
-        { x: 4.25, y: -2, z: -7 },   // Level 5
-        { x: 8.5, y: -4, z: -7 },   // Level 6
-        { x: 12.75, y: -6, z: -7 },   // Level 7
-        { x: 17, y: -8, z: -7 },   // Finish
+        { x: -16, y: -8, z: -7 }, // Start
+        { x: -12, y: -6, z: -7 },   // Level 1 (Step 1)
+        { x: -8, y: -4, z: -7 },    // Level 2 (Step 2)
+        { x: -4, y: -2, z: -7 },    // Level 3 (Step 3)
+        { x: 0, y: 0, z: -7 },      // Level 4 (Step 4)
+        { x: 4.25, y: 2, z: -7 },   // Level 5 (Step 5)
+        { x: 8.5, y: 4, z: -7 },    // Level 6 (Step 6)
+        { x: 12.75, y: 6, z: -7 },  // Level 7 (Step 7)
+        { x: 17, y: 8, z: -7 },     // Finish (Final Step)
     ];
 
     const questions = [
@@ -64,8 +66,8 @@ export default function Nirnay() {
         setGameOver(true);
     }
 
-    // Determine if the question box should be top-right or bottom-left
-    const isTopRight = currentLevel % 2 === 0;
+    // Determine if the question box should be top-left or bottom-right
+    const isTopLeft = currentLevel % 2 === 0;
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-500 flex items-center justify-center relative">
@@ -90,7 +92,7 @@ export default function Nirnay() {
             {/* Question and Answers */}
             {!gameOver ? (
                 <div
-                    className={`absolute ${isTopRight ? "top-10 right-10" : " ml-10 bottom-10 left-40 transform -translate-x-1/2"} z-20 text-center bg-white p-6 rounded-lg shadow-xl`}
+                    className={`absolute ${isTopLeft ? "top-10 left-10" : "bottom-10 right-10"} z-20 text-center bg-white p-6 rounded-lg shadow-xl`}
                 >
                     <h2 className="text-xl font-semibold mb-4">{questions[currentLevel]?.question}</h2>
                     <div className="flex space-x-4">

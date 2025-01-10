@@ -94,13 +94,13 @@ const BachatSaathiPage = () => {
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-400 text-white py-12 px-4">
       <div className="max-w-4xl mx-auto bg-teal-100 p-8 rounded-2xl shadow-2xl text-gray-800">
         {/* Back Arrow Button */}
-      <button
-        onClick={navigateToHomepage}
-        className="flex items-center text-teal-700 font-bold text-lg mb-6 hover:text-teal-800 transition"
-      >
-        {/* Arrow icon styled with CSS */}
-        <span className="material-icons">arrow_back</span>
-      </button>
+        <button
+          onClick={navigateToHomepage}
+          className="flex items-center text-teal-700 font-bold text-lg mb-6 hover:text-teal-800 transition"
+        >
+          {/* Arrow icon styled with CSS */}
+          <span className="material-icons">arrow_back</span>
+        </button>
 
 
         <h2 className="text-4xl font-bold text-center mb-6 text-teal-700">
@@ -120,7 +120,7 @@ const BachatSaathiPage = () => {
               <>
                 {recommendations.length > 0 ? (
                   <div className="mt-6 p-6 bg-white rounded-lg shadow-lg">
-                    <h3 className="text-2xl font-semibold text-teal-700 mb-4">
+                    <h3 className="text-2xl font-semibold text-teal-500 mb-4">
                       Your Personalized Recommendation
                     </h3>
                     <ul className="text-lg space-y-3">
@@ -142,7 +142,7 @@ const BachatSaathiPage = () => {
             {savingsPlan && (
               <button
                 onClick={navigateToSavingsPlan}
-                className="mt-6 w-full bg-yellow-400 text-teal-800 text-lg font-bold py-3 px-6 rounded-lg shadow hover:bg-yellow-500 transition"
+                className="mt-6 w-full bg-yellow-400 text-black text-lg font-bold py-3 px-6 rounded-lg shadow hover:bg-yellow-500 transition"
               >
                 Enroll Now
               </button>

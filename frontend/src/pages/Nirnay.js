@@ -37,14 +37,30 @@ export default function Nirnay() {
     ];
 
     const questions = [
-        { question: "What is 5 + 3?", answers: ["7", "8", "9"], correct: "8" },
-        { question: "What is the capital of India?", answers: ["Delhi", "Mumbai", "Kolkata"], correct: "Delhi" },
-        { question: "What is 12 / 4?", answers: ["3", "4", "5"], correct: "3" },
-        { question: "Which is the largest planet?", answers: ["Earth", "Mars", "Jupiter"], correct: "Jupiter" },
-        { question: "What is the square of 5?", answers: ["15", "25", "30"], correct: "25" },
-        { question: "Who painted the Mona Lisa?", answers: ["Van Gogh", "Da Vinci", "Picasso"], correct: "Da Vinci" },
-        { question: "What is the boiling point of water?", answers: ["50°C", "100°C", "200°C"], correct: "100°C" },
-        { question: "Who discovered gravity?", answers: ["Einstein", "Newton", "Galileo"], correct: "Newton" },
+        {
+            question: "Ramu earns ₹5,000 a month by selling fruits.", answers: ["Ramu saves ₹2,000 every month in a bank to use in emergencies or invest in expanding his fruit business.", "Ramu spends all ₹5,000 on buying a new phone, leaving nothing for savings or future needs."], correct: "Ramu saves ₹2,000 every month in a bank to use in emergencies or invest in expanding his fruit business."
+        },
+        {
+            question: "Radha’s crop failed, and she needs ₹10,000.", answers: ["Radha borrows from a moneylender who charges very high interest, and she struggles to pay it back.", "Radha borrows from the cooperative bank at a low interest rate and repays it slowly."], correct: "Radha borrows from the cooperative bank at a low interest rate and repays it slowly."
+        },
+        {
+            question: "Lalita earns ₹3,000 selling handmade baskets.", answers: ["Lalita saves ₹1,000 every month to repair her house before the monsoon.", "Lalita spends all her money on festivals, leaving nothing for house repairs."], correct: "Lalita saves ₹1,000 every month to repair her house before the monsoon."
+        },
+        {
+            question: "Kiran hears about a scheme to double his savings in a month.", answers: ["Kiran puts his money in a bank account, where it grows slowly but safely.", "Kiran gives his money to the scheme and loses everything when it turns out to be a fraud."], correct: "Kiran puts his money in a bank account, where it grows slowly but safely."
+        },
+        {
+            question: "Mohan earns ₹6,000 a month and spends ₹5,000.", answers: ["Mohan saves ₹1,000 every month for emergencies like illness or crop failure.", "Mohan spends the extra ₹1,000 on luxuries, leaving nothing for emergencies"], correct: "Mohan saves ₹1,000 every month for emergencies like illness or crop failure."
+        },
+        {
+            question: "Sita sells vegetables and earns ₹4,000 a month.", answers: ["Sita spends all her earnings on sweets and festivals, so her business doesn’t grow.", "Sita saves ₹2,000 to buy a cart, which will help her sell more vegetables and earn more."], correct: "Sita saves ₹2,000 to buy a cart, which will help her sell more vegetables and earn more."
+        },
+        {
+            question: "Raju has ₹3,000 to spend for farming.", answers: ["Raju buys good-quality seeds that will give him a better harvest next season", "Raju spends the money on a new watch, leaving nothing for his farm."], correct: "Raju buys good-quality seeds that will give him a better harvest next season"
+        },
+        {
+            question: "Pooja borrows ₹20,000 to expand her tailoring business.", answers: ["Pooja spends the loan on a wedding, leaving her with debt and no way to repay it.", "Pooja uses the loan to buy a sewing machine and earns more money by stitching faster."], correct: "Pooja uses the loan to buy a sewing machine and earns more money by stitching faster."
+        },
     ];
 
     const handleAnswer = (answer) => {
@@ -90,17 +106,19 @@ export default function Nirnay() {
             {gameOver && <Confetti />}
 
             {/* Question and Answers */}
+            {/* Question and Answers */}
+            {/* Question and Answers */}
             {!gameOver ? (
                 <div
-                    className={`absolute ${isTopLeft ? "top-10 left-10" : "bottom-10 right-10"} z-20 text-center bg-white p-6 rounded-lg shadow-xl`}
+                    className={`absolute ${isTopLeft ? "top-10 left-10" : "bottom-10 right-10"} z-20 text-center bg-white p-6 rounded-lg shadow-xl w-80`}
                 >
                     <h2 className="text-xl font-semibold mb-4">{questions[currentLevel]?.question}</h2>
-                    <div className="flex space-x-4">
+                    <div className="flex flex-col space-y-4"> {/* Changed to flex-col and added space-y-4 */}
                         {questions[currentLevel]?.answers.map((answer, index) => (
                             <button
                                 key={index}
                                 onClick={() => handleAnswer(answer)}
-                                className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition"
+                                className="px-4 py-6 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition w-full self-center text-left whitespace-normal"
                             >
                                 {answer}
                             </button>
@@ -123,6 +141,7 @@ export default function Nirnay() {
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

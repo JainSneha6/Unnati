@@ -136,74 +136,90 @@ const SmartNiveshPage = () => {
     }
   };
 
+  const FilterOption = ({ label, id, value, onChange, options }) => (
+    <div>
+      <label htmlFor={id} className="block font-medium">
+        {label}
+      </label>
+      <select
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="p-2 w-full border rounded-lg text-black"
+      >
+        {options.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+
   const navigateToHomepage = () => {
     navigate("/home");
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-teal-400 text-white py-12 px-4 relative">
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 w-64 h-full bg-teal-800 text-white transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out z-50`}
+        className={`fixed top-0 left-0 w-64 h-full bg-yellow-500 text-white transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300 ease-in-out z-50`}
       >
         <div className="p-6">
-          <h3 className="text-2xl font-semibold text-white mb-4">Filters</h3>
+          <h3 className="text-2xl font-semibold mb-4">Filters</h3>
           <div className="space-y-4">
-            <div>
-              <label htmlFor="minInvestment" className="block font-medium">Minimum Investment Amount (₹)</label>
-              <select
-                id="minInvestment"
-                value={minInvestment}
-                onChange={(e) => setMinInvestment(e.target.value)}
-                className="p-2 w-full border rounded-lg text-black"
-              >
-                <option value={0}>Any amount</option>
-                <option value={1000}>₹1000+</option>
-                <option value={2000}>₹2000+</option>
-                <option value={3000}>₹3000+</option>
-                <option value={5000}>₹5000+</option>
-                <option value={10000}>₹10000+</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="riskLevel" className="block font-medium">Risk Level</label>
-              <select
-                id="riskLevel"
-                value={riskLevel}
-                onChange={(e) => setRiskLevel(e.target.value)}
-                className="p-2 w-full border rounded-lg text-black"
-              >
-                <option value="">Any Risk Level</option>
-                <option value="Low">Low Risk</option>
-                <option value="Medium">Medium Risk</option>
-                <option value="High">High Risk</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="investmentType" className="block font-medium">Investment Type</label>
-              <select
-                id="investmentType"
-                value={investmentType}
-                onChange={(e) => setInvestmentType(e.target.value)}
-                className="p-2 w-full border rounded-lg text-black"
-              >
-                <option value="">Any Type</option>
-                <option value="Government Scheme">Government Scheme</option>
-                <option value="Bank Deposit">Bank Deposit</option>
-                <option value="Fixed Deposit">Fixed Deposit</option>
-                <option value="Savings Account">Savings Account</option>
-                <option value="Fixed Income Security">Fixed Income Security</option>
-                <option value="Government Savings Scheme">Government Savings Scheme</option>
-              </select>
-            </div>
+            <FilterOption
+              label="Minimum Investment Amount (₹)"
+              id="minInvestment"
+              value={minInvestment}
+              onChange={setMinInvestment}
+              options={[
+                { value: 0, label: "Any amount" },
+                { value: 1000, label: "₹1000+" },
+                { value: 2000, label: "₹2000+" },
+                { value: 3000, label: "₹3000+" },
+                { value: 5000, label: "₹5000+" },
+                { value: 10000, label: "₹10000+" },
+              ]}
+            />
+            <FilterOption
+              label="Risk Level"
+              id="riskLevel"
+              value={riskLevel}
+              onChange={setRiskLevel}
+              options={[
+                { value: "", label: "Any Risk Level" },
+                { value: "Low", label: "Low Risk" },
+                { value: "Medium", label: "Medium Risk" },
+                { value: "High", label: "High Risk" },
+              ]}
+            />
+            <FilterOption
+              label="Investment Type"
+              id="investmentType"
+              value={investmentType}
+              onChange={setInvestmentType}
+              options={[
+                { value: "", label: "Any Type" },
+                { value: "Government Scheme", label: "Government Scheme" },
+                { value: "Bank Deposit", label: "Bank Deposit" },
+                { value: "Fixed Deposit", label: "Fixed Deposit" },
+                { value: "Savings Account", label: "Savings Account" },
+                { value: "Fixed Income Security", label: "Fixed Income Security" },
+                { value: "Government Savings Scheme", label: "Government Savings Scheme" },
+              ]}
+            />
           </div>
         </div>
       </div>
 
+      {/* Main Content */}
       <div className={`transition-all ${isSidebarOpen ? "ml-64" : ""}`}>
         <div className="max-w-4xl mx-auto bg-teal-100 p-8 rounded-2xl shadow-2xl text-gray-800">
+          {/* Back Button */}
           <button
             onClick={navigateToHomepage}
             className="flex items-center text-teal-700 font-bold text-lg mb-6 hover:text-teal-800 transition"
@@ -211,8 +227,10 @@ const SmartNiveshPage = () => {
             <span className="material-icons">arrow_back</span>
           </button>
 
+          {/* Page Title */}
           <h2 className="text-4xl font-bold text-center mb-6 text-teal-700">Smart Nivesh</h2>
 
+          {/* Error and Loading States */}
           {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
           {loading ? (
@@ -221,27 +239,33 @@ const SmartNiveshPage = () => {
             <div className="text-center text-xl">Loading your data...</div>
           ) : (
             <div>
-              <div className="my-6">
-                <button
-                  onClick={toggleSidebar}
-                  className="bg-teal-700 text-white p-2 rounded-lg mb-6"
-                >
-                  {isSidebarOpen ? "Close Filters" : "Open Filters"}
-                </button>
-                <div>
-                  <h3 className="text-2xl font-semibold text-teal-700 mb-4">Micro-Investment Opportunities</h3>
-                  <ul className="text-lg space-y-3">
-                    {filteredInvestments.map((investment, index) => (
-                      <li key={index} className="p-3 bg-teal-50 rounded shadow"
-                        onClick={() => handleInvestmentClick(investment)}
-                      >
-                        <strong>{investment.investment}</strong> - ₹{investment.amount}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              {/* Sidebar Toggle Button */}
+              <button
+                onClick={toggleSidebar}
+                className="bg-yellow-500 text-black p-2 rounded-lg mb-6"
+              >
+                {isSidebarOpen ? "Close Filters" : "Open Filters"}
+              </button>
+
+              {/* Investment Opportunities */}
+              <div>
+                <h3 className="text-2xl font-semibold text-teal-700 mb-4">
+                  Micro-Investment Opportunities
+                </h3>
+                <ul className="text-lg space-y-3">
+                  {filteredInvestments.map((investment, index) => (
+                    <li
+                      key={index}
+                      className="p-3 bg-teal-50 rounded shadow cursor-pointer"
+                      onClick={() => handleInvestmentClick(investment)}
+                    >
+                      <strong>{investment.investment}</strong> - ₹{investment.amount}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
+              {/* Investment Description */}
               {investmentDescription && (
                 <div className="mt-6 p-4 bg-teal-50 rounded shadow">
                   <h3 className="text-xl font-semibold text-teal-700">Investment Description:</h3>
@@ -256,4 +280,8 @@ const SmartNiveshPage = () => {
   );
 };
 
+
+
+
 export default SmartNiveshPage;
+

@@ -131,7 +131,7 @@ const SalahSakhi = () => {
           {/* Arrow icon styled with CSS */}
           <span className="material-icons">arrow_back</span>
         </button>
-        <h1 className="ml-20 text-white text-5xl font-bold pl-20">Salah Sakhi - Your Personal Advisor</h1>
+        <h1 className="ml-20 text-white text-5xl font-bold pl-20">Salah Sakhi</h1>
       </div>
       <div className="flex flex-col md:flex-row justify-center items-start w-full p-6">
         <div className="sticky top-0 w-full md:w-1/3 flex justify-center p-6">

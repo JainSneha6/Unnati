@@ -102,7 +102,7 @@ const Saheli = () => {
         {["Expert Advice", "Webinars", "FAQs", "Community Forum", "Tips", "Resources", "Success Stories", "Events"].map((segment) => (
           <button
             key={segment}
-            className={`px-4 py-2 rounded-lg ${activeSegment === segment ? "bg-blue-600" : "bg-white text-blue-600"
+            className={`px-4 py-2 rounded-lg ${activeSegment === segment ? "bg-teal-500 text-white" : "bg-white text-teal-500"
               }`}
             onClick={() => setActiveSegment(segment)}
           >
@@ -112,14 +112,14 @@ const Saheli = () => {
       </nav>
 
       {/* Dynamic Segments */}
-      <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-8 text-gray-800">
+      <div className="w-full max-w-6xl  p-8 text-gray-800">
         {activeSegment === "Expert Advice" && (
           <section>
-            <h2 className="text-4xl font-bold mb-4 text-blue-600">Expert Advice</h2>
+            <h2 className="text-4xl font-bold mb-4 text-white">Expert Advice</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {adviceList.map((advice, index) => (
                 <div key={index} className="p-6 bg-gray-100 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105">
-                  <h3 className="text-2xl font-semibold text-blue-600">{advice.title}</h3>
+                  <h3 className="text-2xl font-semibold text-teal-500">{advice.title}</h3>
                   <p className="text-gray-700 mt-2">{advice.content}</p>
                   <p className="text-sm text-gray-500 mt-4">Posted on {advice.timestamp}</p>
                 </div>
@@ -130,11 +130,11 @@ const Saheli = () => {
 
         {activeSegment === "Webinars" && (
           <section>
-            <h2 className="text-4xl font-bold mb-4 text-blue-600">Upcoming Webinars</h2>
+            <h2 className="text-4xl font-bold mb-4 text-white">Upcoming Webinars</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {webinars.map((webinar, index) => (
                 <div key={index} className="p-6 bg-gray-100 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105">
-                  <h3 className="text-2xl font-semibold text-blue-600">{webinar.title}</h3>
+                  <h3 className="text-2xl font-semibold text-teal-500">{webinar.title}</h3>
                   <p className="text-gray-700 mt-2">{webinar.description}</p>
                   <p className="text-sm text-gray-500 mt-4">Date: {webinar.date}</p>
                 </div>
@@ -145,11 +145,11 @@ const Saheli = () => {
 
         {activeSegment === "FAQs" && (
           <section>
-            <h2 className="text-4xl font-bold mb-4 text-blue-600">FAQs</h2>
+            <h2 className="text-4xl font-bold mb-4 text-white">FAQs</h2>
             <ul className="space-y-4">
               {faqs.map((faq, index) => (
                 <li key={index} className="p-4 bg-gray-100 rounded-lg shadow-md">
-                  <h3 className="text-lg font-semibold text-blue-600">{faq.question}</h3>
+                  <h3 className="text-lg font-semibold text-teal-500">{faq.question}</h3>
                   <p className="text-gray-700 mt-2">{faq.answer}</p>
                 </li>
               ))}
@@ -159,7 +159,7 @@ const Saheli = () => {
 
         {activeSegment === "Community Forum" && (
           <section>
-            <h2 className="text-4xl font-bold mb-4 text-blue-600">Community Forum</h2>
+            <h2 className="text-4xl font-bold mb-4 text-white">Community Forum</h2>
             <form onSubmit={handleQuerySubmit} className="mb-8">
               <textarea
                 className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
@@ -170,7 +170,7 @@ const Saheli = () => {
               ></textarea>
               <button
                 type="submit"
-                className="w-full px-8 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 shadow-md"
+                className="w-full px-8 py-3 bg-teal-500 text-white font-semibold rounded-lg hover:bg-blue-600 shadow-md"
               >
                 Post Query
               </button>
@@ -190,17 +190,17 @@ const Saheli = () => {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500 text-center">No queries posted yet. Be the first to share!</p>
+              <p className="text-white text-center">No queries posted yet. Be the first to share!</p>
             )}
           </section>
         )}
 
         {activeSegment === "Tips" && (
           <section>
-            <h2 className="text-4xl font-bold mb-4 text-blue-600">Financial Tips</h2>
+            <h2 className="text-4xl font-bold mb-4 text-white">Financial Tips</h2>
             <ul className="list-disc pl-5 space-y-2">
               {tips.map((tip, index) => (
-                <li key={index} className="text-gray-700">{tip}</li>
+                <li key={index} className="text-white">{tip}</li>
               ))}
             </ul>
           </section>
@@ -208,13 +208,13 @@ const Saheli = () => {
 
         {activeSegment === "Resources" && (
           <section>
-            <h2 className="text-4xl font-bold mb-4 text-blue-600">Resources</h2>
+            <h2 className="text-4xl font-bold mb-4 text-white">Resources</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {resources.map((resource, index) => (
                 <div key={index} className="p-4 bg-gray-100 rounded-lg shadow-md">
-                  <h3 className="text-xl font-semibold text-blue-600">{resource.title}</h3>
+                  <h3 className="text-xl font-semibold text-teal-500">{resource.title}</h3>
                   <p className="text-gray-700">{resource.type}</p>
-                  <a href={resource.link} className="text-blue-500 mt-2 block">Learn More</a>
+                  <a href={resource.link} className="text-black mt-2 block">Learn More</a>
                 </div>
               ))}
             </div>
@@ -223,11 +223,11 @@ const Saheli = () => {
 
         {activeSegment === "Success Stories" && (
           <section>
-            <h2 className="text-4xl font-bold mb-4 text-blue-600">Success Stories</h2>
+            <h2 className="text-4xl font-bold mb-4 text-white">Success Stories</h2>
             <ul className="space-y-4">
               {successStories.map((story, index) => (
                 <li key={index} className="p-4 bg-gray-100 rounded-lg shadow-md">
-                  <h3 className="text-xl font-semibold text-blue-600">{story.name}</h3>
+                  <h3 className="text-xl font-semibold text-teal-500">{story.name}</h3>
                   <p className="text-gray-700">{story.story}</p>
                 </li>
               ))}
@@ -237,11 +237,11 @@ const Saheli = () => {
 
         {activeSegment === "Events" && (
           <section>
-            <h2 className="text-4xl font-bold mb-4 text-blue-600">Upcoming Events</h2>
+            <h2 className="text-4xl font-bold mb-4 text-white">Upcoming Events</h2>
             <ul className="space-y-4">
               {events.map((event, index) => (
                 <li key={index} className="p-4 bg-gray-100 rounded-lg shadow-md">
-                  <h3 className="text-xl font-semibold text-blue-600">{event.event}</h3>
+                  <h3 className="text-xl font-semibold text-teal-500">{event.event}</h3>
                   <p className="text-gray-700 mt-2">Date: {event.date}</p>
                 </li>
               ))}

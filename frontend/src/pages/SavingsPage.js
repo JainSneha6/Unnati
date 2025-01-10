@@ -69,8 +69,8 @@ const CreativeSavingsPlanPage = () => {
       <div className="max-w-3xl mx-auto bg-teal-100 p-8 rounded-2xl shadow-2xl text-gray-800">
         {savingsPlan ? (
           <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-            <h2 className="text-4xl font-bold text-center text-teal-700">
-            {savingsPlan}
+            <h2 className="text-4xl font-bold text-center text-teal-500">
+              {savingsPlan}
             </h2>
           </div>
         ) : (
@@ -79,7 +79,7 @@ const CreativeSavingsPlanPage = () => {
 
         {recommendations.length > 0 ? (
           <div>
-            <h3 className="text-2xl font-semibold text-teal-700 mb-4">
+            <h3 className="text-2xl font-semibold text-black mb-4">
               Weekly Savings Progress
             </h3>
             <div className="space-y-6">
@@ -140,7 +140,7 @@ const CreativeSavingsPlanPage = () => {
                     </div>
                   </div>
 
-                  <p className="text-sm text-teal-600 mt-4">
+                  <p className="text-sm text-teal-500 mt-4">
                     Total Saved: ₹{getTotalSaved(rec.category)}
                   </p>
                 </div>
@@ -155,7 +155,7 @@ const CreativeSavingsPlanPage = () => {
 
         <button
           onClick={goBack}
-          className="mt-6 bg-yellow-400 text-teal-800 text-lg font-bold py-3 px-6 rounded-lg shadow hover:bg-yellow-500 transition w-full"
+          className="mt-6 bg-yellow-400 text-black text-lg font-bold py-3 px-6 rounded-lg shadow hover:bg-yellow-500 transition w-full"
         >
           Back to Bachat Saathi
         </button>

@@ -4,22 +4,24 @@ Unnati is a comprehensive platform designed to bridge the financial literacy gap
 
 ---
 
-| **Section**           | **Link**                 |
-|-----------------------|--------------------------|
-| **Unnati Overview**    | [Go to Section](#solution-overview)       |
-| **Features**           | [Go to Features](#features)            |
-| **Kahani Kosh**        | [Explore Kahani Kosh](#kahani-kosh)     |
-| **Bachat Saathi**      | [Explore Bachat Saathi](#bachat-saathi) |
-| **Smart Nivesh**       | [Explore Smart Nivesh](#smart-nivesh)   |
-| **Salah Sakhi**        | [Chat with Salah Sakhi](#salah-sakhi)   |
-| **Nirnay**             | [Play Nirnay](#nirnay)        |
-| **Saheli**             | [Join Saheli](#saheli)       |
-| **Flowcharts**         | [View Flowcharts](#flowcharts)    |
-| **Tech Stack**         | [Discover Tech Stack](#tech-stack)   |
-| **Projections**        | [See Projections](#projections)    |
-| **Innovations**        | [Learn Innovations](#why-is-unnati-innovative)    |
-| **Social Impact**      | [Explore Social Impact](#social-impact)    |
-| **Project Architecture** | [View Architecture](#project-architecture)   |
+| **Index** | **Section**           | **Link**                 |
+|-----------|-----------------------|--------------------------|
+| 1         | **Unnati Overview**    | [Go to Section](#solution-overview)       |
+| 2         | **Features**           | [Go to Features](#features)            |
+| 2.1       | **Kahani Kosh**        | [Explore Kahani Kosh](#kahani-kosh)     |
+| 2.2       | **Bachat Saathi**      | [Explore Bachat Saathi](#bachat-saathi) |
+| 2.3       | **Smart Nivesh**       | [Explore Smart Nivesh](#smart-nivesh)   |
+| 2.4       | **Salah Sakhi**        | [Chat with Salah Sakhi](#salah-sakhi)   |
+| 2.5       | **Nirnay**             | [Play Nirnay](#nirnay)        |
+| 2.6       | **Saheli**             | [Join Saheli](#saheli)       |
+| 3         | **Flowcharts**         | [View Flowcharts](#flowcharts)    |
+| 4         | **Tech Stack**         | [Discover Tech Stack](#tech-stack)   |
+| 5         | **Projections**        | [See Projections](#projections)    |
+| 6         | **Innovations**        | [Learn Innovations](#why-is-unnati-innovative)    |
+| 7         | **Social Impact**      | [Explore Social Impact](#social-impact)    |
+| 8         | **Project Architecture** | [View Architecture](#project-architecture)   |
+| 9         | **Snapshots of Project** | [Snapshots of Project](#snapshots-of-project)   |
+| 10         | **Demo Video** | [Demo Video](#demo-video)   |
 
 ---
 
@@ -107,6 +109,18 @@ Unnati is a comprehensive platform designed to bridge the financial literacy gap
 | **Focused on Rural Women** | Unnati is specifically designed to cater to the financial needs of rural women, addressing the unique barriers they face in financial literacy and economic participation. |  
 | **Interactive Learning** | Features like Kahani Kosh and Nirnay use gamification and storytelling to engage users and improve learning outcomes, making financial literacy enjoyable and accessible. |  
 | **Social Impact**        | The platform is not only about financial growth but also about empowering women to become leaders in their communities, enhancing their business acumen and creating economic opportunities for others. |  
+
+---
+
+## Social Impact  
+
+Unnati focuses on improving the financial literacy of rural women, enabling them to build savings, investments, and small businesses. This empowerment leads to the following social impacts:
+
+- **Increased Economic Independence**: Women gain control over their financial resources, contributing to the family and community economy.
+- **Entrepreneurship Growth**: Unnati supports women in starting and growing businesses, leading to improved livelihoods.
+- **Community Support Systems**: Through mentorship and peer learning, women become leaders in their communities, guiding others toward financial success.
+- **Improved Family Well-being**: Women with financial independence contribute to better healthcare, education, and overall well-being for their families.
+- **Empowering Future Generations**: By fostering financial literacy in women, the next generation is more likely to have access to education and better economic opportunities.
 
 ---
 
@@ -200,4 +214,20 @@ Unnati is a comprehensive platform designed to bridge the financial literacy gap
 <div align="center">
   <img src="https://github.com/user-attachments/assets/61305c74-fe51-4184-86ad-b5c036f47ff8" alt="Solution Overview" />
 </div>
+
 ---
+
+## Snapshots of Project
+
+![img1](https://github.com/user-attachments/assets/2dca5e9c-1c9c-4646-8bf1-99eaecc0c83c)
+![img2](https://github.com/user-attachments/assets/36af9275-c010-4b28-b036-903fe05de8e7)
+![img5](https://github.com/user-attachments/assets/7082544f-dfc5-4b15-bc40-3ba75819170b)
+![img6](https://github.com/user-attachments/assets/75988625-0246-4cd7-ae35-28588834ad94)
+![img7](https://github.com/user-attachments/assets/757d7d3c-a98f-4b1e-96e4-13211ccbfe1f)
+![img8](https://github.com/user-attachments/assets/32c25867-5084-4fd6-bc0c-c0f9cb9963cd)
+![img13](https://github.com/user-attachments/assets/75b17bf6-c001-45e9-8fb8-93d6e6a8983b)
+![img9](https://github.com/user-attachments/assets/e18de681-bf20-45ad-abd9-05df6180b616)
+
+## Demo Video
+
+https://drive.google.com/file/d/1ZlDc5vTkL2ATe7ke2iLbC19AnrhjY2aM/view

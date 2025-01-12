@@ -155,7 +155,11 @@ const ChapterPage = () => {
                         {videoUrl && (
                             <div className="mt-6">
                                 <h3 className="font-semibold text-teal-500"></h3>
-                                <video controls className="w-full max-w-3xl mt-4">
+                                <video
+                                    controls
+                                    className="w-full max-w-3xl mt-4"
+                                    style={{ height: "500px" }} // Adjust the height as needed
+                                >
                                     <source src={videoUrl} type="video/mp4" />
                                     Your browser does not support the video tag.
                                 </video>

@@ -4,15 +4,25 @@ Unnati is a comprehensive platform designed to bridge the financial literacy gap
 
 ---
 
-## Table of Contents  
-
-- [Solution Overview](#solution-overview)
-- [Features](#features)
-- [Flowcharts](#flowcharts)  
-- [Projections](#projections)  
-- [Tech Stack](#tech-stack)  
+| **Section**           | **Link**                 |
+|-----------------------|--------------------------|
+| **Unnati Overview**    | [Go to Section](#solution-overview)       |
+| **Features**           | [Go to Features](#features)            |
+| **Kahani Kosh**        | [Explore Kahani Kosh](#kahani-kosh)     |
+| **Bachat Saathi**      | [Explore Bachat Saathi](#bachat-saathi) |
+| **Smart Nivesh**       | [Explore Smart Nivesh](#smart-nivesh)   |
+| **Salah Sakhi**        | [Chat with Salah Sakhi](#salah-sakhi)   |
+| **Nirnay**             | [Play Nirnay](#nirnay)        |
+| **Saheli**             | [Join Saheli](#saheli)       |
+| **Flowcharts**         | [View Flowcharts](#flowcharts)    |
+| **Tech Stack**         | [Discover Tech Stack](#tech-stack)   |
+| **Projections**        | [See Projections](#projections)    |
+| **Innovations**        | [Learn Innovations](#why-is-unnati-innovative)    |
+| **Social Impact**      | [Explore Social Impact](#social-impact)    |
+| **Project Architecture** | [View Architecture](#project-architecture)   |
 
 ---
+
 ## Solution Overview
 
 <div align="center">
@@ -20,28 +30,99 @@ Unnati is a comprehensive platform designed to bridge the financial literacy gap
 </div>
 
 ---
-## Features
+## Features  
 
-| Feature        | Description                                                                                                         |  
-|----------------|---------------------------------------------------------------------------------------------------------------------|  
-| **Kahani Kosh**| <img src="https://github.com/user-attachments/assets/1f79f12c-5314-40b5-a3a5-ff17b23b7038" width="500" />         |  
-| **Bachat Saathi**| <img src="https://github.com/user-attachments/assets/ac8e7922-5291-4698-8539-5a107da6f9d4" width="500" />        |  
-| **Smart Nivesh**| <img src="https://github.com/user-attachments/assets/c9a18cd2-b0bf-4169-a55a-976d40ee9079" width="500" />         |  
-| **Salah Sakhi**| <img src="https://github.com/user-attachments/assets/a1fe7d46-b643-41dd-8801-05cb57bc04fd" width="500" />         |  
-| **Nirnay**     | <img src="https://github.com/user-attachments/assets/86d10052-f3ff-4744-bdd4-d5a57b01e66c" width="500" />         |  
-| **Saheli**     | <img src="https://github.com/user-attachments/assets/81e41a37-19a5-4624-9ae5-203cefb0d16e" width="500" />         |  
+### Kahani Kosh  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/1f79f12c-5314-40b5-a3a5-ff17b23b7038" width="500" />
+</div>
+
+### Bachat Saathi  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/ac8e7922-5291-4698-8539-5a107da6f9d4" width="500" />
+</div>
+
+### Smart Nivesh  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/c9a18cd2-b0bf-4169-a55a-976d40ee9079" width="500" />
+</div>
+
+### Salah Sakhi  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/a1fe7d46-b643-41dd-8801-05cb57bc04fd" width="500" />
+</div>
+
+### Nirnay  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/86d10052-f3ff-4744-bdd4-d5a57b01e66c" width="500" />
+</div>
+
+### Saheli  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/81e41a37-19a5-4624-9ae5-203cefb0d16e" width="500" />
+</div>
 
 ---
 ## Flowcharts  
 
-| Feature        | Flowchart                                                                                                           |  
-|----------------|---------------------------------------------------------------------------------------------------------------------|  
-| **Kahani Kosh**| <img src="https://github.com/user-attachments/assets/ad7c57d6-f3aa-409c-8dd6-11312fcd7735" width="500" />         |  
-| **Bachat Saathi**| <img src="https://github.com/user-attachments/assets/543dbb6f-2499-4f63-83b5-111fa478fe15" width="500" />        |  
-| **Smart Nivesh**| <img src="https://github.com/user-attachments/assets/8c03a0eb-795e-4700-b8cc-58fa2336375d" width="500" />         |  
-| **Salah Sakhi**| <img src="https://github.com/user-attachments/assets/7a4242ba-a44c-43fa-9587-51577dddbcb9" width="500" />         |  
-| **Nirnay**     | <img src="https://github.com/user-attachments/assets/51479884-aae2-480c-b4f5-8dd0efda480b" width="500" />         |  
-| **Saheli**     | <img src="https://github.com/user-attachments/assets/d92e96f9-7cd0-42c5-b123-a3d1da25f4de" width="500" />         |  
+### Kahani Kosh  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/ad7c57d6-f3aa-409c-8dd6-11312fcd7735" width="500" />
+</div>
+
+### Bachat Saathi  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/543dbb6f-2499-4f63-83b5-111fa478fe15" width="500" />
+</div>
+
+### Smart Nivesh  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/8c03a0eb-795e-4700-b8cc-58fa2336375d" width="500" />
+</div>
+
+### Salah Sakhi  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/7a4242ba-a44c-43fa-9587-51577dddbcb9" width="500" />
+</div>
+
+### Nirnay  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/51479884-aae2-480c-b4f5-8dd0efda480b" width="500" />
+</div>
+
+### Saheli  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/d92e96f9-7cd0-42c5-b123-a3d1da25f4de" width="500" />
+</div>
+
+---
+
+## Why Is Unnati Innovative?
+
+| **Feature**              | **Innovation**                                                                                               |  
+|--------------------------|-------------------------------------------------------------------------------------------------------------|  
+| **AI-Powered Personalization** | Unnati uses AI to provide tailored financial advice, ensuring that each user gets customized suggestions based on their individual financial situation and goals. |  
+| **Comprehensive Financial Tools** | The platform combines budgeting, saving, micro-investing, and financial education into a single solution, reducing the need for multiple apps and services. |  
+| **Community-Centric Approach** | Unnati fosters a sense of community through mentorship, discussions, and peer learning, helping users to grow together and support each other. |  
+| **Focused on Rural Women** | Unnati is specifically designed to cater to the financial needs of rural women, addressing the unique barriers they face in financial literacy and economic participation. |  
+| **Interactive Learning** | Features like Kahani Kosh and Nirnay use gamification and storytelling to engage users and improve learning outcomes, making financial literacy enjoyable and accessible. |  
+| **Social Impact**        | The platform is not only about financial growth but also about empowering women to become leaders in their communities, enhancing their business acumen and creating economic opportunities for others. |  
+
+---
+
+## Project Architecture
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/c781c48a-4600-48fd-bc56-105d0123ae19" alt="Solution Overview" />
+</div>
+
+---
+
+## Tech Stack
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/36ea3c91-a8ee-4e68-b42e-1972c872aa1d" alt="Solution Overview" />
+</div>
 
 ---
 
@@ -64,7 +145,6 @@ Unnati is a comprehensive platform designed to bridge the financial literacy gap
 <div align="center">
   <img src="https://github.com/user-attachments/assets/b2c012be-fc36-468b-a68f-06d576c9fe36" alt="Solution Overview" />
 </div>
-
 
 ### Bachat Saathi  
 | Time Period     | Users Inputting Data | Users Tracking Expenses | Users Creating Budget | Savings Increase | Consistent Savings | Improved Awareness |  

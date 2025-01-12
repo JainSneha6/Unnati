@@ -8,7 +8,7 @@ function GirlModel({ position, targetPosition }) {
 
     useFrame(() => {
         if (targetPosition && (position.x !== targetPosition.x || position.z !== targetPosition.z || position.y !== targetPosition.y)) {
-            // Smooth transition using easing effect
+
             position.x += (targetPosition.x - position.x) * 0.05;
             position.z += (targetPosition.z - position.z) * 0.05;
             position.y += (targetPosition.y - position.y) * 0.1; // Smooth transition for height
